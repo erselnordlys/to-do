@@ -1,16 +1,19 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="main">
-        <years></years>
+
         <months v-on:changeIt="toggleBool(showMonth)" v-bind:ok="bool"></months>
+        <div v-if="!bool">choose the month</div>
         <schedule v-bind:ok="bool"></schedule>
+        <affairs v-bind:show="bool"></affairs>
     </div>
 </template>
 
 <script>
 
-    import months from './Months.vue';
-    import schedule from './Schedule.vue';
-    import Years from './Years.vue';
+    import months from './months/Months.vue';
+    import schedule from './schedule/Schedule.vue';
+    import Years from './not-used/Years.vue';
+    import Affairs from './affairs/Affairs.vue';
 
     export default {
         name: '',
@@ -23,11 +26,11 @@
             months: months,
             schedule: schedule,
             years: Years,
+            affairs: Affairs
         },
         methods: {
             toggleBool: function (m) {
                 this.bool = true;
-                console.log(m);
             },
 
             show: function () {

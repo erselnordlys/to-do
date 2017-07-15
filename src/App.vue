@@ -1,6 +1,6 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div id="app">
-	<h1>TO-DO</h1>
+	<!--<h1>TO-DO</h1>-->
 
 	<my-main></my-main>
   </div>
@@ -30,7 +30,7 @@
 		-moz-osx-font-smoothing: grayscale;
 		text-align: center;
 		color: #2c3e50;
-		margin-top: 20px;
+		margin-top: 0;
 
 		display: flex;
 		flex-direction: column;
@@ -42,6 +42,7 @@
 
 	h1, h2 {
 		font-weight: normal;
+        margin: 0 0 10px;
 	}
 
 	ul {
