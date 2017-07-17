@@ -12,17 +12,8 @@
 
                 <!--tasks list-->
                 <div class="tasks__msg">{{ msgTasks }}
-                    <div  class="tasks">
-                        <task @dragTask="getTask" v-bind:task="tasks.sport"></task>
-                        <task @dragTask="getTask" v-bind:task="tasks.web"></task>
-                        <task @dragTask="getTask" v-bind:task="tasks.study"></task>
-                        <task @dragTask="getTask" v-bind:task="tasks.household"></task>
-                        <task @dragTask="getTask" v-bind:task="tasks.therapy"></task>
-                        <task @dragTask="getTask" v-bind:task="tasks.dayOff"></task>
-                        <task @dragTask="getTask" v-bind:task="tasks.exams"></task>
-                        <task @dragTask="getTask" v-bind:task="tasks.diploma"></task>
-                        <task @dragTask="getTask" v-bind:task="tasks.bureaucratic"></task>
-
+                    <div class="tasks">
+                        <task v-for="item in onTasks" @dragTask="getTask" v-bind:task="item"></task>
                     </div>
                 </div>
 
@@ -42,8 +33,8 @@
                 </div>
 
                 <!--new task input-->
-                <div class="new-task__msg"> {{ msgNewTask}}
-                    <div class="new-task"><input></div>
+                <div class="new-task__msg" > {{ msgNewTask}} {{newTaskLine}}
+                    <input class="new-task" v-model="newTaskLine" v-on:keyup.enter="addNewTask"/>
                 </div>
 
                 <!--delete task-->
@@ -114,7 +105,8 @@
                 temp: {task: '', time: ''},
                 clearBtn: 'x',
                 h: '',
-                vis: false
+                vis: false,
+                newTaskLine: ''
             }
         },
         props: ['show', 'task'],
@@ -153,13 +145,36 @@
                 // hide clear btn
                 this.res = { task: '', time: ''};
                 this.temp = { task: '', time: ''};
-            }
+            },
+
+            addNewTask: function() {
+
+                if (this.newTaskLine.length > 0) {
+
+                    //push new key-value to tasks
+                    this.tasks[this.newTaskLine] = this.newTaskLine;
+                    this.newTaskLine = '';
+                }
+            },
 
         },
 
         computed: {
             results: function () {
                 return this.res;
+            },
+
+            listTasks: function () {
+                var arr = [];
+
+                for (var key in this.tasks) {
+                    arr.push(this.tasks[key]);
+                }
+                return arr;
+            },
+
+            onTasks: function () {
+                return this.tasks;
             }
         }
     }
@@ -238,12 +253,16 @@
         height: 34px;
     }
 
-    .new-task > input {
+    input {
         width: 100%;
         height: 100%;
-        padding: 0 10px;
+        /*padding: 0 20px;*/
         font-size: 18px;
         outline: none;
+    }
+
+    .new-task {
+        padding: 4px 10px 8px;
     }
 
     .task-time {

@@ -17,10 +17,6 @@
             task: String
         },
         methods: {
-            drag: function (ev) {
-                ev.dataTransfer.setData("text", ev.target.innerHTML);
-                console.log('dragged' + ev.target.innerHTML);
-            },
 
             display: function () {
 //                console.log(event.target.innerHTML);
