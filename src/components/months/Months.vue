@@ -7,9 +7,9 @@
             <month v-bind:nam="names[1]" v-on:change="changeIt" v-bind:clicked="ok"> </month>
             <month v-bind:nam="names[2]" v-on:change="changeIt" v-bind:clicked="ok"></month>
             <month v-bind:nam="names[3]" v-on:change="changeIt" v-bind:clicked="ok"></month>
-            <month v-bind:nam="names[4]" v-on:change="changeIt" v-bind:clicked="ok" class="current"></month>
+            <month v-bind:nam="names[4]" v-on:change="changeIt" v-bind:clicked="ok"></month>
             <month v-bind:nam="names[5]" v-on:change="changeIt" v-bind:clicked="ok"></month>
-            <month v-bind:nam="names[6]" v-on:change="changeIt" v-bind:clicked="ok"></month>
+            <month v-bind:nam="names[6]" v-on:change="changeIt" v-bind:clicked="ok" class="current"></month>
             <month v-bind:nam="names[7]" v-on:change="changeIt" v-bind:clicked="ok"></month>
             <month v-bind:nam="names[8]" v-on:change="changeIt" v-bind:clicked="ok"></month>
             <month v-bind:nam="names[9]" v-on:change="changeIt" v-bind:clicked="ok"></month>

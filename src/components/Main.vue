@@ -12,7 +12,6 @@
 
     import months from './months/Months.vue';
     import schedule from './schedule/Schedule.vue';
-    import Years from './not-used/Years.vue';
     import Affairs from './affairs/Affairs.vue';
 
     export default {
@@ -25,7 +24,6 @@
         components: {
             months: months,
             schedule: schedule,
-            years: Years,
             affairs: Affairs
         },
         methods: {

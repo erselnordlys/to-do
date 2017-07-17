@@ -4,19 +4,13 @@
 
         <div class="row-group">
 
-        <!--chose the day, list tasks-->
+            <!--new task drag, tasks list-->
             <div class="column-group">
 
-                <div> {{ msgTaskTime}}
-                    <div class="task-time" @dragover.prevent @drop="drop">
-                        <div class="res">{{ res.task + ' ' + res.time}}
-                        </div>
-                        <div class="clear-btn" v-on:click="clearRes"> {{ clearBtn }}</div>
+                <!--drag block for new tasks-->
+                <div @drop="drop" @dragover.prevent><task-time v-bind:obj="results" v-on:clear="clearResults"></task-time></div>
 
-                    </div>
-                </div>
-
-
+                <!--tasks list-->
                 <div class="tasks__msg">{{ msgTasks }}
                     <div  class="tasks">
                         <task @dragTask="getTask" v-bind:task="tasks.sport"></task>
@@ -34,46 +28,46 @@
 
             </div>
 
-            <!--time, new task, archive-->
+            <!--time, new task, delete-->
             <div class="column-group">
+
+                <!--time list-->
                 <div class="time__msg">{{ msgTime }}
                     <div class="time">
                         <duration @dragTime="getTime" v-bind:hours="time.halfHour"></duration>
                         <duration @dragTime="getTime" v-bind:hours="time.hour"></duration>
-                        <duration @dragTime="getTime" v-bind:hours="time.halfAndHour"></duration>
                         <duration @dragTime="getTime" v-bind:hours="time.twoHours"></duration>
                         <duration @dragTime="getTime" v-bind:hours="time.threeHours"></duration>
                     </div>
                 </div>
 
-
-
+                <!--new task input-->
                 <div class="new-task__msg"> {{ msgNewTask}}
                     <div class="new-task"><input></div>
                 </div>
 
+                <!--delete task-->
                 <div class="archive__msg">{{msgAchv}}
-                    <div class="archive"> X </div>
+                    <div class="archive">X</div>
                 </div>
 
             </div>
 
-
-
         </div>
 
-
-        <div class="results__msg"> {{ msgResults }}</div>
-        <div class="results">
-            <res v-bind:resName="tasks.sport"></res>
-            <res v-bind:resName="tasks.web"></res>
-            <res v-bind:resName="tasks.study"></res>
-            <res v-bind:resName="tasks.household"></res>
-            <res v-bind:resName="tasks.therapy"></res>
-            <res v-bind:resName="tasks.dayOff"></res>
-            <res v-bind:resName="tasks.exams"></res>
-            <res v-bind:resName="tasks.diploma"></res>
-            <res v-bind:resName="tasks.bureaucratic"></res>
+        <!--results-->
+        <div class="results__msg"> {{ msgResults }}
+            <div class="results">
+                <res v-bind:resName="tasks.sport"></res>
+                <res v-bind:resName="tasks.web"></res>
+                <res v-bind:resName="tasks.study"></res>
+                <res v-bind:resName="tasks.household"></res>
+                <res v-bind:resName="tasks.therapy"></res>
+                <res v-bind:resName="tasks.dayOff"></res>
+                <res v-bind:resName="tasks.exams"></res>
+                <res v-bind:resName="tasks.diploma"></res>
+                <res v-bind:resName="tasks.bureaucratic"></res>
+            </div>
         </div>
 
     </div>
@@ -84,7 +78,8 @@
     import Task from './Task.vue';
     import Time from './Time.vue';
     import Res from './Results.vue';
-    import Choose from './ChooseTheDay.vue';
+    import TaskTime from  './TaskTime.vue';
+
 
     export default {
         name: 'Affairs',
@@ -96,7 +91,7 @@
                 msgTasks: 'What are your tasks?',
                 msgTime: 'How much time did it take?',
                 msgResults: 'Your results this month',
-                msgAchv: 'Send task to archive',
+                msgAchv: 'Delete task',
                 tasks: {
                     sport: 'sports',
                     web: 'web',
@@ -109,16 +104,17 @@
                     diploma: 'diploma'
                 },
                 time: {
-                    halfHour: '0,5h',
-                    hour: '1h',
-                    halfAndHour: '1,5h',
-                    twoHours: '2h',
-                    threeHours:'3h'
+                    halfHour: 0.5,
+                    hour: 1,
+                    halfAndHour: 1.5,
+                    twoHours: 2,
+                    threeHours: 3
                 },
-                results: {},
                 res: {task: '', time: ''},
                 temp: {task: '', time: ''},
-                clearBtn: ''
+                clearBtn: 'x',
+                h: '',
+                vis: false
             }
         },
         props: ['show', 'task'],
@@ -126,32 +122,45 @@
             task: Task,
             duration: Time,
             res: Res,
-            choose: Choose
+            'task-time': TaskTime
         },
         methods: {
             drop: function () {
-                console.log(this.temp);
+                // add values to results when dropped
                 this.res.task = this.temp.task;
-                this.res.time = this.temp.time;
-                console.log(this.res);
+                if (this.temp.time !== '') {
+                    this.res.time = Number(this.res.time);
+                    this.res.time += Number(this.temp.time);
+                }
 
-                this.clearBtn = 'x';
+                this.temp.time = '';
+
+//                console.log('temp: ' + this.temp.task + this.temp.time);
+//                console.log('res: ' + this.res.task + this.res.time);
             },
 
             getTask: function (val) {
+                // add chosen task to temp map
                 this.temp.task = val;
-                console.log(val);
             },
 
             getTime: function (val) {
+                // add chosen time to temp map
                 this.temp.time = val;
-                console.log(val);
             },
-            clearRes: function () {
-                this.res = {task: '', time: ''};
-                this.clearBtn = '';
+
+            clearResults: function () {
+                // hide clear btn
+                this.res = { task: '', time: ''};
+                this.temp = { task: '', time: ''};
             }
 
+        },
+
+        computed: {
+            results: function () {
+                return this.res;
+            }
         }
     }
 </script>
