@@ -1,6 +1,19 @@
 # to-do
 
-> A Vue.js project
+A Vue.js project
+
+## Run the project:
+
+``` bash
+# choose you local repository and install npm
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# run the project
+npm run dev
+```
 
 ## Build Setup
 
