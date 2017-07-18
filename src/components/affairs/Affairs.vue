@@ -13,7 +13,7 @@
                 <!--tasks list-->
                 <div class="tasks__msg">{{ msgTasks }}
                     <div class="tasks">
-                        <task v-for="item in onTasks" @dragTask="getTask" v-bind:task="item"></task>
+                        <task v-for="item in onTasks" @dragTask="getTask" v-bind:task="item" id="task"></task>
                     </div>
                 </div>
 
@@ -33,14 +33,15 @@
                 </div>
 
                 <!--new task input-->
-                <div class="new-task__msg" > {{ msgNewTask}} {{newTaskLine}}
+                <div class="new-task__msg" > {{ msgNewTask}}
                     <input class="new-task" v-model="newTaskLine" v-on:keyup.enter="addNewTask"/>
                 </div>
 
-                <!--delete task-->
-                <div class="archive__msg">{{msgAchv}}
-                    <div class="archive">X</div>
+                <!--delete btn-->
+                <div @drop="deleteTask" @dragover.prevent id="delete">
+                    <del-block></del-block>
                 </div>
+
 
             </div>
 
@@ -49,15 +50,7 @@
         <!--results-->
         <div class="results__msg"> {{ msgResults }}
             <div class="results">
-                <res v-bind:resName="tasks.sport"></res>
-                <res v-bind:resName="tasks.web"></res>
-                <res v-bind:resName="tasks.study"></res>
-                <res v-bind:resName="tasks.household"></res>
-                <res v-bind:resName="tasks.therapy"></res>
-                <res v-bind:resName="tasks.dayOff"></res>
-                <res v-bind:resName="tasks.exams"></res>
-                <res v-bind:resName="tasks.diploma"></res>
-                <res v-bind:resName="tasks.bureaucratic"></res>
+                <res v-for="item in onTasks" v-bind:resName="item"></res>
             </div>
         </div>
 
@@ -70,6 +63,7 @@
     import Time from './Time.vue';
     import Res from './Results.vue';
     import TaskTime from  './TaskTime.vue';
+    import Delete from './DeleteBtn.vue';
 
 
     export default {
@@ -78,20 +72,21 @@
             return {
                 msgNewTask: 'Add a new task in list:',
                 msgTaskTime: 'Drag a new task here',
-                msgChosenDay: 'Choose the day',
                 msgTasks: 'What are your tasks?',
                 msgTime: 'How much time did it take?',
                 msgResults: 'Your results this month',
-                msgAchv: 'Delete task',
+                msgDelete: 'Delete task',
+
                 tasks: {
-                    sport: 'sports',
+                    sports: 'sports',
                     web: 'web',
                     study: 'study',
-                    dayOff: 'day-off',
+                    'day-off': 'day-off',
                     household: 'household',
                     therapy: 'therapy',
                     exams: 'exams',
                     bureaucratic: 'bureaucratic',
+                    French: 'French',
                     diploma: 'diploma'
                 },
                 time: {
@@ -103,9 +98,6 @@
                 },
                 res: {task: '', time: ''},
                 temp: {task: '', time: ''},
-                clearBtn: 'x',
-                h: '',
-                vis: false,
                 newTaskLine: ''
             }
         },
@@ -114,21 +106,22 @@
             task: Task,
             duration: Time,
             res: Res,
-            'task-time': TaskTime
+            'task-time': TaskTime,
+            'del-block': Delete
         },
         methods: {
             drop: function () {
                 // add values to results when dropped
-                this.res.task = this.temp.task;
+                if (this.temp.task !== '') {
+                    this.res.task = this.temp.task;
+
+                }
                 if (this.temp.time !== '') {
                     this.res.time = Number(this.res.time);
                     this.res.time += Number(this.temp.time);
                 }
 
                 this.temp.time = '';
-
-//                console.log('temp: ' + this.temp.task + this.temp.time);
-//                console.log('res: ' + this.res.task + this.res.time);
             },
 
             getTask: function (val) {
@@ -157,20 +150,29 @@
                 }
             },
 
+            deleteTask: function () {
+
+                if(this.temp.task !== this.res.task) {
+
+
+                    var newObj = this.tasks;
+                    this.tasks = {};
+
+                    delete newObj[this.temp.task]; // таск который в руке в этот момент
+
+                    for (var key in newObj) {
+                        this.tasks[key] = key;
+                    }
+                    this.temp.task = '';
+
+                }
+            }
+
         },
 
         computed: {
             results: function () {
                 return this.res;
-            },
-
-            listTasks: function () {
-                var arr = [];
-
-                for (var key in this.tasks) {
-                    arr.push(this.tasks[key]);
-                }
-                return arr;
             },
 
             onTasks: function () {
@@ -205,11 +207,8 @@
 
     .time,
     .results,
-    .archive,
     .tasks,
-    .new-task,
-    .task-time,
-    .drag{
+    .new-task {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -238,20 +237,13 @@
 
     .tasks,
     .time,
-    .archive,
+    .delete,
     .new-task {
         max-width: 240px;
     }
 
 
-    .archive {
-        background: indianred;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding-bottom: 4px;
-        height: 34px;
-    }
+
 
     input {
         width: 100%;
@@ -264,40 +256,4 @@
     .new-task {
         padding: 4px 10px 8px;
     }
-
-    .task-time {
-        height: 36px;
-        border-color: green;
-        min-width: 40px;
-        width: auto;
-        position: relative;
-
-    }
-
-    .res {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-
-        margin: 4px 2px 0;
-        padding: 0 6px;
-
-        cursor: pointer;
-    }
-
-    .clear-btn {
-        position: absolute;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        right: 0;
-        top: 0;
-        
-        font-weight: bold;
-        cursor: pointer;
-        height: 100%;
-        width: 20px;
-    }
-
 </style>
