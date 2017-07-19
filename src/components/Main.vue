@@ -1,14 +1,21 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="main">
 
+        <!--{{taskTimeReceived}}-->
         <months v-on:changeIt="toggleBool(showMonth)" v-bind:ok="bool"></months>
         <div v-if="!bool">choose the month</div>
-        <schedule v-bind:ok="bool"></schedule>
-        <affairs v-bind:show="bool"></affairs>
+
+        <div @drop="drop" @dragover.prevent>
+            <schedule v-bind:ok="bool" v-bind:receiveTaskTime="forScheduleTaskTime"></schedule>
+        </div>
+
+        <affairs v-bind:show="bool" v-on:dragTaskTime="saveTaskTime"></affairs>
     </div>
 </template>
 
 <script>
+
+//    v-bind:receiveTaskTime="taskTimeForSchedule"
 
     import months from './months/Months.vue';
     import schedule from './schedule/Schedule.vue';
@@ -18,8 +25,13 @@
         name: '',
         data () {
             return {
-                bool: false
+                bool: false,
+
+                taskTimeReceived: {},
+                forScheduleTaskTime: ''
             }
+        },
+        props: {
         },
         components: {
             months: months,
@@ -33,11 +45,22 @@
 
             show: function () {
                 this.$emit('show')
+            },
+
+            saveTaskTime: function (val) {
+                this.taskTimeReceived = val;
+            },
+
+            drop: function () {
+                // use value only with task and time
+                if (this.taskTimeReceived.task !== '' && this.taskTimeReceived.time > 0) {
+                    this.forScheduleTaskTime = this.taskTimeReceived;
+                }
             }
         },
         computed: {
             showMonth: function () {
-            return months.data().msg;
+                return months.data().msg;
             }
         }
     }

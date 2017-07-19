@@ -1,6 +1,10 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="num">
-    {{ num }}
+        <div class="num">{{ num }}
+        </div>
+
+        <div class="task">
+        </div>
     </div>
 </template>
 
@@ -12,13 +16,18 @@
             return {
             }
         },
-        methods: {},
-        props: ['num']
+        methods: {
+            get: function () {
+                this.$emit('get');
+                console.log('get');
+            }
+        },
+        props: ['num', 'task']
     }
 </script>
 
 <style scoped>
-    #num {
+    .num {
         height: 30px;
         width: 60px;
         background: whitesmoke;
@@ -29,5 +38,9 @@
         align-items: flex-end;
 
         padding-left: 10px;
+    }
+
+    .task {
+        width: 60px;
     }
 </style>

@@ -1,6 +1,9 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="schedule" v-if="ok">
-        <day v-for="item in buildItems" v-bind:num="item">{{ }}</day>
+        <!--{{receiveTaskTime}}-->
+
+        <day v-for="(item, index) in numbers" v-bind:days="item" v-bind:index="(index +1)" v-bind:obj="receiveTaskTime"></day>
+
     </div>
 </template>
 
@@ -12,39 +15,31 @@
         name: 'Schedule',
         data () {
             return {
-                items: [],
-                numbers: [],
-                daysOfWeek: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+                weekDay: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'],
         }
 
         },
-        methods: {},
+        methods: {
+            passObj: function () {
+                console.log('passObj');
+            }
+        },
         components: {
             day: Day
         },
-        props: ['ok'],
+        props: ['ok', 'receiveTaskTime'],
 
         computed: {
-            buildItems: function () {
 
-                // add day number
+            numbers: function () {
+                var nums = [];
+                var j = 5;
                 for (var i = 1; i < 32; i++) {
-                    this.numbers.push(i);
-                }
-
-                var i = 0;
-                var j = 0;
-
-                // add days of week
-                while (i < 31) {
-                    j = j % this.daysOfWeek.length;
-
-                    this.items.push(this.numbers[i] + this.daysOfWeek[j]);
-                    i++;
+                    nums.push(this.weekDay[j]);
                     j++;
+                    j = j % this.weekDay.length;
                 }
-
-                return this.items;
+                return nums;
             }
         }
     }
@@ -64,7 +59,6 @@
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
-        /*margin: 0 10px 0 0;*/
 
         border: 1px solid black;
         border-radius: 3px;

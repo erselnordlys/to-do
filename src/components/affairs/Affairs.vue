@@ -4,11 +4,15 @@
 
         <div class="row-group">
 
+            {{ passTaskTime}}
+
             <!--new task drag, tasks list-->
             <div class="column-group">
 
                 <!--drag block for new tasks-->
-                <div @drop="drop" @dragover.prevent><task-time v-bind:obj="results" v-on:clear="clearResults"></task-time></div>
+                <div @drop="drop" @dragover.prevent>
+                    <task-time v-bind:obj="results" v-on:clear="clearResults" @dragTaskTime="getPreparedObj"></task-time>
+                </div>
 
                 <!--tasks list-->
                 <div class="tasks__msg">{{ msgTasks }}
@@ -25,10 +29,7 @@
                 <!--time list-->
                 <div class="time__msg">{{ msgTime }}
                     <div class="time">
-                        <duration @dragTime="getTime" v-bind:hours="time.halfHour"></duration>
-                        <duration @dragTime="getTime" v-bind:hours="time.hour"></duration>
-                        <duration @dragTime="getTime" v-bind:hours="time.twoHours"></duration>
-                        <duration @dragTime="getTime" v-bind:hours="time.threeHours"></duration>
+                        <duration @dragTime="getTime" v-for="item in time" v-bind:hours="item"></duration>
                     </div>
                 </div>
 
@@ -38,10 +39,9 @@
                 </div>
 
                 <!--delete btn-->
-                <div @drop="deleteTask" @dragover.prevent id="delete">
+                <div @drop="deleteTask" @dragover.prevent>
                     <del-block></del-block>
                 </div>
-
 
             </div>
 
@@ -92,16 +92,16 @@
                 time: {
                     halfHour: 0.5,
                     hour: 1,
-                    halfAndHour: 1.5,
                     twoHours: 2,
                     threeHours: 3
                 },
                 res: {task: '', time: ''},
                 temp: {task: '', time: ''},
+                prepObj: '',
                 newTaskLine: ''
             }
         },
-        props: ['show', 'task'],
+        props: ['show', 'task', 'passTaskTime'],
         components: {
             task: Task,
             duration: Time,
@@ -114,8 +114,8 @@
                 // add values to results when dropped
                 if (this.temp.task !== '') {
                     this.res.task = this.temp.task;
-
                 }
+
                 if (this.temp.time !== '') {
                     this.res.time = Number(this.res.time);
                     this.res.time += Number(this.temp.time);
@@ -127,11 +127,21 @@
             getTask: function (val) {
                 // add chosen task to temp map
                 this.temp.task = val;
+                this.temp.time = '';
+
             },
 
             getTime: function (val) {
                 // add chosen time to temp map
                 this.temp.time = val;
+                this.temp.task = '';
+
+            },
+
+            getPreparedObj: function (val) {
+                this.prepObj = val;
+                this.$emit('dragTaskTime', this.prepObj);
+//                console.log(this.prepObj);
             },
 
             clearResults: function () {
@@ -152,8 +162,7 @@
 
             deleteTask: function () {
 
-                if(this.temp.task !== this.res.task) {
-
+                if (this.temp.task !== this.res.task) {
 
                     var newObj = this.tasks;
                     this.tasks = {};

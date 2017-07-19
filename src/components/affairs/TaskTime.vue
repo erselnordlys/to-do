@@ -2,7 +2,7 @@
 
         <div> {{ msg }}
             <div id="task-time">
-                <div class="res" v-if="vis" draggable="true">{{ obj.task + ' ' + obj.time + h}}</div>
+                <div class="res" v-if="vis" draggable="true" v-on:drag="change">{{ obj.task + ' ' + obj.time + h}}</div>
                 <div class="clear-btn" v-if="vis" v-on:click="clearRes">{{ clearBtn }}</div>
             </div>
         </div>
@@ -29,6 +29,11 @@
                 this.obj.time = '';
 
                 this.$emit('clear');
+            },
+
+            change: function () {
+                this.$emit('dragTaskTime', this.myObj);
+//                console.log(this.obj);
             }
         },
 
@@ -45,6 +50,10 @@
                 if (this.obj.time == '' && this.obj.task == '') {
                     return false;
                 } else { return true}
+            },
+
+            myObj: function () {
+                return this.obj;
             }
         }
     }
