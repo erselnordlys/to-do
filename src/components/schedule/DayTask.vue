@@ -23,12 +23,10 @@
         justify-content: center;
 
         width: auto;
-        /*max-width: 200px;*/
 
         height: 30px;
-        /*border: 1px solid grey;*/
         border-radius: 3px;
-        background: wheat;
+        background: lightgray;
         margin: auto 3px;
         padding: 0 6px;
 
