@@ -2,14 +2,27 @@
     <div id="main">
 
         <!--{{taskTimeReceived}}-->
-        <months v-on:changeIt="toggleBool(showMonth)" v-bind:ok="bool"></months>
+        <months
+                v-on:changeIt="toggleBool"
+                v-bind:ok="bool">
+        </months>
+
         <div v-if="!bool">choose the month</div>
 
-        <div @drop="drop" @dragover.prevent>
-            <schedule v-bind:ok="bool" v-bind:receiveTaskTime="forScheduleTaskTime"></schedule>
+        <div
+                @drop="dropTask"
+                @dragover.prevent>
+
+                <schedule
+                        v-bind:vis="bool"
+                        v-bind:receiveTaskTime="forScheduleTaskTime">
+                </schedule>
         </div>
 
-        <affairs v-bind:show="bool" v-on:dragTaskTime="saveTaskTime"></affairs>
+        <affairs
+                v-bind:show="bool"
+                v-on:dragTaskTime="saveTaskTime">
+        </affairs>
     </div>
 </template>
 
@@ -26,41 +39,44 @@
         data () {
             return {
                 bool: false,
-
-                taskTimeReceived: {},
-                forScheduleTaskTime: ''
+                taskTimeReceived: {
+                    task: '',
+                    time: ''
+                }
             }
         },
-        props: {
-        },
+        props: {},
         components: {
             months: months,
             schedule: schedule,
             affairs: Affairs
         },
         methods: {
-            toggleBool: function (m) {
+            toggleBool: function () {
                 this.bool = true;
-            },
-
-            show: function () {
-                this.$emit('show')
             },
 
             saveTaskTime: function (val) {
                 this.taskTimeReceived = val;
             },
 
-            drop: function () {
-                // use value only with task and time
-                if (this.taskTimeReceived.task !== '' && this.taskTimeReceived.time > 0) {
-                    this.forScheduleTaskTime = this.taskTimeReceived;
-                }
+            dropTask: function () {
+
+               if (this.taskTimeReceived.task !== undefined && this.taskTimeReceived.time !== undefined
+                    && this.taskTimeReceived.task !== '' && this.taskTimeReceived.time !== '') {
+                    console.log('all term go well');
+                } else {
+                   console.log('error');
+               }
             }
         },
         computed: {
             showMonth: function () {
                 return months.data().msg;
+            },
+
+            forScheduleTaskTime: function () {
+                return this.taskTimeReceived;
             }
         }
     }

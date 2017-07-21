@@ -1,36 +1,33 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
-    <div id="schedule" v-if="ok">
+    <div id="schedule" v-if="vis">
         <!--{{receiveTaskTime}}-->
-
-        <day v-for="(item, index) in numbers" v-bind:days="item" v-bind:index="(index +1)" v-bind:obj="receiveTaskTime"></day>
+        <day
+                v-for="(item, index) in numbers"
+                v-bind:days="item"
+                v-bind:index="(index +1)"
+                v-bind:obj="receiveTaskTime">
+        </day>
 
     </div>
 </template>
 
 <script>
     import Day from './Day.vue';
-    import Month from '../months/Month.vue';
 
     export default {
         name: 'Schedule',
         data () {
             return {
                 weekDay: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'],
-        }
-
-        },
-        methods: {
-            passObj: function () {
-                console.log('passObj');
             }
         },
+        methods: {},
         components: {
             day: Day
         },
-        props: ['ok', 'receiveTaskTime'],
+        props: ['vis', 'receiveTaskTime'],
 
         computed: {
-
             numbers: function () {
                 var nums = [];
                 var j = 5;
@@ -52,8 +49,8 @@
         min-height: 558px;
         max-width: 800px;
         width: auto;
-        flex-grow: 0;
-        min-width: 300px;
+        flex-grow: 1;
+        min-width: 400px;
 
         display: flex;
         flex-direction: column;
