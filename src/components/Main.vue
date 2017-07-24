@@ -21,6 +21,7 @@
 
         <affairs
                 v-bind:show="bool"
+                v-bind:vals="dropped"
                 v-on:dragTaskTime="saveTaskTime">
         </affairs>
     </div>
@@ -39,6 +40,7 @@
         data () {
             return {
                 bool: false,
+                dropped: true,
                 taskTimeReceived: {
                     task: '',
                     time: ''
@@ -64,10 +66,20 @@
 
                if (this.taskTimeReceived.task !== undefined && this.taskTimeReceived.time !== undefined
                     && this.taskTimeReceived.task !== '' && this.taskTimeReceived.time !== '') {
-                    console.log('all term go well');
+                   console.log('drop occured');
+                   this.dropped = false;
                 } else {
                    console.log('error');
+                   this.dropped = true;
                }
+
+               console.log(this.dropped);
+
+                this.taskTimeReceived = { task: '', time: ''}
+            },
+
+            alert: function () {
+                console.log('drop');
             }
         },
         computed: {

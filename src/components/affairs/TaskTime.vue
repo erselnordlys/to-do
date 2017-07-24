@@ -2,7 +2,9 @@
 
         <div> {{ msg }}
             <div id="task-time">
-                <div class="res" v-if="vis" draggable="true" v-on:drag="change">{{ obj.task + ' ' + obj.time + h}}</div>
+                <div class="res" v-if="vis" draggable="true" v-on:drag="change">{{ myObj.task + ' ' + myObj.time + h}}</div>
+                <!--<div class="res" v-if="show" draggable="true" v-on:drag="change">{{ myObj.task + ' ' + myObj.time + h}}</div>-->
+
                 <div class="clear-btn" v-if="vis" v-on:click="clearRes">{{ clearBtn }}</div>
             </div>
         </div>
@@ -18,22 +20,26 @@
                 clearBtn: 'x',
             }
         },
-        props: ['obj'],
+        props: {
+            obj: {},
+            show: false
+        },
 
         methods: {
 
             // clear results by click on btn
             clearRes: function () {
+                console.log('clearRes');
                 // hide clear btn
-                this.obj.task = '';
-                this.obj.time = '';
+                this.myObj.task = '';
+                this.myObj.time = '';
 
                 this.$emit('clear');
             },
 
             change: function () {
                 this.$emit('dragTaskTime', this.myObj);
-//                console.log(this.obj);
+
             }
         },
 
@@ -47,14 +53,16 @@
 
             // show/hide clear button
             vis: function () {
-                if (this.obj.time == '' && this.obj.task == '') {
+
+                if ((this.myObj.time == '' && this.myObj.task == '') || this.myObj == '') {
                     return false;
-                } else { return true}
+                } else { return true }
             },
 
             myObj: function () {
-                return this.obj;
+                    return this.obj;
             }
+
         }
     }
 </script>

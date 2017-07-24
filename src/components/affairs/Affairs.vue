@@ -11,7 +11,7 @@
 
                 <!--drag block for new tasks-->
                 <div @drop="drop" @dragover.prevent>
-                    <task-time v-bind:obj="results" v-on:clear="clearResults" @dragTaskTime="getPreparedObj"></task-time>
+                    <task-time v-bind:show="vals" v-bind:obj="results" v-on:clear="clearResults" @dragTaskTime="getPreparedObj"></task-time>
                 </div>
 
                 <!--tasks list-->
@@ -101,7 +101,7 @@
                 newTaskLine: ''
             }
         },
-        props: ['show', 'task', 'passTaskTime'],
+        props: ['show', 'task', 'passTaskTime', 'vals'],
         components: {
             task: Task,
             duration: Time,
@@ -161,20 +161,21 @@
             },
 
             deleteTask: function () {
-
-                if (this.temp.task !== this.res.task) {
-
                     var newObj = this.tasks;
                     this.tasks = {};
 
-                    delete newObj[this.temp.task]; // таск который в руке в этот момент
+                    delete newObj[this.temp.task]; // таск который удаляется в этот момент
 
                     for (var key in newObj) {
                         this.tasks[key] = key;
                     }
+                    // delete task from task-time block if dragged
+                    if (this.temp.task == this.res.task)  {
+                        this.res.task = '';
+                        this.res.time = '';
+                    }
                     this.temp.task = '';
-
-                }
+//                }
             }
 
         },
