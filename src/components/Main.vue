@@ -1,35 +1,40 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="main">
 
-        <!--{{taskTimeReceived}}-->
         <months
-                v-on:changeIt="toggleBool"
-                v-bind:ok="bool">
+                v-on:change="toggleBool"
+                v-on:selectCurrentMonth="saveSelectedMonth"
+                v-bind:selectedMonth="selectedMonth"
+        >
         </months>
 
         <div v-if="!bool">choose the month</div>
 
         <div
                 @drop="dropTask"
-                @dragover.prevent>
+                @dragover.prevent
+                 >
 
                 <schedule
+                        @dragDayTask="saveDayTask"
                         v-bind:vis="bool"
-                        v-bind:receiveTaskTime="forScheduleTaskTime">
+                        v-bind:wholeData="receivedData"
+                        v-bind:receiveTaskTime="forScheduleTaskTime"
+                        v-bind:selectedMonth="selectedMonth"
+                >
                 </schedule>
         </div>
 
         <affairs
                 v-bind:show="bool"
                 v-bind:vals="dropped"
-                v-on:dragTaskTime="saveTaskTime">
+                v-on:dragTaskTime="saveTaskTime"
+                v-bind:deleteDT="renderDayTaskForDelete">
         </affairs>
     </div>
 </template>
 
 <script>
-
-//    v-bind:receiveTaskTime="taskTimeForSchedule"
 
     import months from './months/Months.vue';
     import schedule from './schedule/Schedule.vue';
@@ -39,15 +44,20 @@
         name: '',
         data () {
             return {
-                bool: false,
-                dropped: true,
+                bool: true,
+                dropped: false,
                 taskTimeReceived: {
                     task: '',
                     time: ''
-                }
+                },
+                dayTaskForDelete: {},
+
+                selectedMonth: 6
             }
         },
-        props: {},
+        props: {
+            receivedData: ''
+        },
         components: {
             months: months,
             schedule: schedule,
@@ -67,10 +77,10 @@
                if (this.taskTimeReceived.task !== undefined && this.taskTimeReceived.time !== undefined
                     && this.taskTimeReceived.task !== '' && this.taskTimeReceived.time !== '') {
                    console.log('drop occured');
-                   this.dropped = false;
+                   this.dropped = true;
                 } else {
                    console.log('error');
-                   this.dropped = true;
+                   this.dropped = false;
                }
 
                console.log(this.dropped);
@@ -78,17 +88,24 @@
                 this.taskTimeReceived = { task: '', time: ''}
             },
 
-            alert: function () {
-                console.log('drop');
+            saveDayTask: function (obj) {
+                this.dayTaskForDelete = obj;
+//                console.log(this.renderDayTaskForDelete);
+
+            },
+
+            saveSelectedMonth: function (month) {
+                this.selectedMonth = month;
             }
         },
         computed: {
-            showMonth: function () {
-                return months.data().msg;
-            },
 
             forScheduleTaskTime: function () {
                 return this.taskTimeReceived;
+            },
+
+            renderDayTaskForDelete: function () {
+                return this.dayTaskForDelete;
             }
         }
     }

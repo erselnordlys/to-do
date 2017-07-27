@@ -3,8 +3,6 @@
         <div> {{ msg }}
             <div id="task-time">
                 <div class="res" v-if="vis" draggable="true" v-on:drag="change">{{ myObj.task + ' ' + myObj.time + h}}</div>
-                <!--<div class="res" v-if="show" draggable="true" v-on:drag="change">{{ myObj.task + ' ' + myObj.time + h}}</div>-->
-
                 <div class="clear-btn" v-if="vis" v-on:click="clearRes">{{ clearBtn }}</div>
             </div>
         </div>
@@ -22,7 +20,7 @@
         },
         props: {
             obj: {},
-            show: false
+            show: true
         },
 
         methods: {

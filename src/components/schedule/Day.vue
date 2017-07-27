@@ -1,12 +1,13 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="day"
          @drop="append">
-        <div class="num-of-day"> {{ index + days }}</div>
+        <div class="num-of-day" v-bind:class="{ weekend: isWeekend }"> {{ dayOfMonth + ' ' + dayOfWeek }}</div>
         <day-task
                 v-if="vis"
                 class="task"
                 v-for="item in renderTask"
-                v-bind:tsk="item">
+                v-bind:tsk="item"
+                @dayTaskDrag="change" >
         </day-task>
 
     </div>
@@ -14,6 +15,8 @@
 
 <script>
     import DayTask from './DayTask.vue';
+    import {todoRef} from '../../firebase-module';
+
     export default {
         name: '',
         data () {
@@ -24,7 +27,7 @@
                 vis: false
             }
         },
-        props: ['days', 'obj', 'index'],
+        props: ['dayOfWeek', 'obj', 'dayOfMonth', 'allDayTasks', 'isWeekend'],
         components: {
             'day-task': DayTask
         },
@@ -51,6 +54,11 @@
                 console.log(this.tasks);
 
                 console.log(this.renderTask);
+            },
+
+            change: function (val) {
+                var obj = {'val': val, 'arr': this.renderTask};
+                this.$emit('change', obj);
             }
         },
 
@@ -65,6 +73,13 @@
                 for (var key in this.smth) {
                     arr.push(key + ' ' +  this.smth[key] + 'h');
                 }
+//                var myObject = JSON.parse(this.allDayTasks);
+//                console.log(this.allDayTasks);
+
+//                for (var key in this.allDayTasks) {
+//
+//                    arr.push(myObject.name + ' ' + myObject.duration + 'h');
+//                }
                 return arr;
             }
         }
@@ -102,7 +117,13 @@
         flex-direction: row;
         align-items: flex-end;
 
-        padding-left: 10px;
+        padding: 0 5px;
+        font-weight: bold;
+
+    }
+
+    .weekend {
+        color: indianred;
     }
 
 </style>

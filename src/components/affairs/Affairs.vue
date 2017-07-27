@@ -11,7 +11,7 @@
 
                 <!--drag block for new tasks-->
                 <div @drop="drop" @dragover.prevent>
-                    <task-time v-bind:show="vals" v-bind:obj="results" v-on:clear="clearResults" @dragTaskTime="getPreparedObj"></task-time>
+                    <task-time v-bind:vis="clearResults" v-bind:obj="results" v-on:clear="clearResults" @dragTaskTime="getPreparedObj"></task-time>
                 </div>
 
                 <!--tasks list-->
@@ -98,7 +98,9 @@
                 res: {task: '', time: ''},
                 temp: {task: '', time: ''},
                 prepObj: '',
-                newTaskLine: ''
+                newTaskLine: '',
+                deleteDT: {},
+                deleteDayTaskTemp: {}
             }
         },
         props: ['show', 'task', 'passTaskTime', 'vals'],
@@ -141,7 +143,6 @@
             getPreparedObj: function (val) {
                 this.prepObj = val;
                 this.$emit('dragTaskTime', this.prepObj);
-//                console.log(this.prepObj);
             },
 
             clearResults: function () {
@@ -161,6 +162,7 @@
             },
 
             deleteTask: function () {
+                if(this.renderdeleteDTTemp == {}) {
                     var newObj = this.tasks;
                     this.tasks = {};
 
@@ -175,7 +177,19 @@
                         this.res.time = '';
                     }
                     this.temp.task = '';
-//                }
+
+                } else {
+                    // delete daytask
+
+                    this.renderdeleteDTTemp = this.deleteDT;
+//                    this.deleteDT = {};
+
+                    console.log(this.deleteDT);
+
+//                delete this.deleteDayTaskTemp[val];
+                }
+
+
             }
 
         },
@@ -187,6 +201,10 @@
 
             onTasks: function () {
                 return this.tasks;
+            },
+
+            renderdeleteDTTemp: function () {
+                return this.deleteDayTaskTemp;
             }
         }
     }
