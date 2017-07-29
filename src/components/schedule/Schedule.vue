@@ -23,6 +23,7 @@
         data () {
             return {
                 weekDay: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'],
+                startDayOfWeek: [6, 2, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4]
             }
         },
         methods: {
@@ -37,9 +38,10 @@
 
         computed: {
             daysOfWeek: function () {
-                var nums = [];
+                let nums = [];
 
-                var lengthOfMonth;
+                // define the length of months
+                let lengthOfMonth;
                 if ( [0, 2, 4, 6, 7, 9, 11].indexOf(this.selectedMonth) >= 0 ) {
                     lengthOfMonth = 31;
                  } else if ([3, 5, 8 , 10].indexOf(this.selectedMonth) >= 0) {
@@ -48,8 +50,9 @@
                     lengthOfMonth = 28;
                 }
 
-                var j = 5;
-                for (var i = 0; i < lengthOfMonth; i++) {
+                // append days of week on each
+                let j = this.startDayOfWeek[this.selectedMonth];
+                for (let i = 0; i < lengthOfMonth; i++) {
                     nums.push(this.weekDay[j]);
                     j++;
                     j = j % this.weekDay.length;
