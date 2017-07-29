@@ -19,3 +19,7 @@ var firebaseApp = Firebase.initializeApp(config);
 export const db = firebaseApp.database();
 
 export const todoRef = db.ref('todo');
+
+export const counterRef = db.ref('counter');
+
+export const firebase = Firebase;

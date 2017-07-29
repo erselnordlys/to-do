@@ -2,9 +2,10 @@
     <div id="schedule" v-if="vis">
 
         <day
+                v-bind:selectedMonth="selectedMonth"
                 v-bind:isWeekend="(item == 'sat') || ( item == 'sun')"
                 v-bind:allDayTasks="wholeData"
-                v-for="(item, index) in numbers"
+                v-for="(item, index) in daysOfWeek"
                 v-bind:dayOfWeek="item"
                 v-bind:dayOfMonth="(index + 1)"
                 v-bind:obj="receiveTaskTime"
@@ -35,7 +36,7 @@
         props: ['vis', 'receiveTaskTime','wholeData', 'selectedMonth'],
 
         computed: {
-            numbers: function () {
+            daysOfWeek: function () {
                 var nums = [];
 
                 var lengthOfMonth;

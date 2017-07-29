@@ -39,6 +39,10 @@
     import months from './months/Months.vue';
     import schedule from './schedule/Schedule.vue';
     import Affairs from './affairs/Affairs.vue';
+    import {db} from '../firebase-module';
+
+    var counterRef = db.ref('counter');
+    var selectedMonthInDB = 3;
 
     export default {
         name: '',
@@ -51,8 +55,7 @@
                     time: ''
                 },
                 dayTaskForDelete: {},
-
-                selectedMonth: 6
+                selectedMonth: 5
             }
         },
         props: {
@@ -95,7 +98,19 @@
             },
 
             saveSelectedMonth: function (month) {
-                this.selectedMonth = month;
+                // add new number of month to db
+                counterRef.set({
+                    selected: month
+                });
+
+                // read stated number of month from db
+                counterRef.once('value', function (snap) {
+                    selectedMonthInDB = snap.val().selected;
+                });
+
+                this.selectedMonth = selectedMonthInDB;
+
+                console.log(selectedMonthInDB);
             }
         },
         computed: {
@@ -106,6 +121,12 @@
 
             renderDayTaskForDelete: function () {
                 return this.dayTaskForDelete;
+            }
+        },
+
+        firebase: {
+            counter: {
+                source: counterRef
             }
         }
     }

@@ -7,15 +7,21 @@
                 class="task"
                 v-for="item in renderTask"
                 v-bind:tsk="item"
-                @dayTaskDrag="change" >
+                @dayTaskDrag="change">
         </day-task>
 
+        <!--{{ startAtDate }} | {{ endAtDate }}-->
+        <div v-for="item in todo">{{item.date}}</div>
     </div>
 </template>
 
 <script>
+
     import DayTask from './DayTask.vue';
     import {todoRef} from '../../firebase-module';
+    import {firebase} from '../../firebase-module';
+
+    console.log(firebase);
 
     export default {
         name: '',
@@ -23,11 +29,12 @@
             return {
                 tasks: {},
                 smth: {},
-                arr: [1, 2, 3 ,4, 5],
-                vis: false
+                arr: [1, 2, 3, 4, 5],
+                vis: false,
+                todo: []
             }
         },
-        props: ['dayOfWeek', 'obj', 'dayOfMonth', 'allDayTasks', 'isWeekend'],
+        props: ['dayOfWeek', 'obj', 'dayOfMonth', 'allDayTasks', 'isWeekend', 'selectedMonth'],
         components: {
             'day-task': DayTask
         },
@@ -35,10 +42,10 @@
         methods: {
             append: function () {
                 // fill tasks from obj
-                if ( (this.renderObject.task !== '') && (this.renderObject.time !== '')
-                && (this.renderObject.task !== undefined) && (this.renderObject.time !== undefined)) {
+                if ((this.renderObject.task !== '') && (this.renderObject.time !== '')
+                    && (this.renderObject.task !== undefined) && (this.renderObject.time !== undefined)) {
 
-                    if( this.tasks[this.renderObject.task] !== undefined) {
+                    if (this.tasks[this.renderObject.task] !== undefined) {
                         // summarize stated time
                         this.tasks[this.renderObject.task] += this.renderObject.time;
                     } else {
@@ -71,19 +78,44 @@
                 var arr = [];
 
                 for (var key in this.smth) {
-                    arr.push(key + ' ' +  this.smth[key] + 'h');
+                    arr.push(key + ' ' + this.smth[key] + 'h');
+                    return arr;
                 }
-//                var myObject = JSON.parse(this.allDayTasks);
-//                console.log(this.allDayTasks);
 
-//                for (var key in this.allDayTasks) {
-//
-//                    arr.push(myObject.name + ' ' + myObject.duration + 'h');
-//                }
-                return arr;
+            },
+
+            startAtDate: function () {
+                // january is 01
+                if (this.selectedMonth < 9) {
+                    return ('2017-0' + (this.selectedMonth + 1) + '-01');
+                } else if (this.selectedMonth >= 9) {
+                    return ('2017-' + (this.selectedMonth + 1) + '-01');
+                }
+            },
+            endAtDate: function () {
+                if (this.selectedMonth < 8) {
+                    return ('2017-0' + (this.selectedMonth + 1) + '-31');
+                } else if (this.selectedMonth == 11) {
+                    return '2017-12-31';
+                } else if (this.selectedMonth >= 8) {
+                    return ('2017-' + (this.selectedMonth + 1) + '-31');
+                }
+
+            }
+        }
+        ,
+        firebase: function () {
+            return {
+                todo: {
+                    source: todoRef.orderByChild('date').startAt(this.startAtDate).endAt(this.endAtDate),
+                    cancelCallback (err) {
+                        console.log(err)
+                    }
+                }
             }
         }
     }
+
 </script>
 
 <style scoped>
@@ -118,7 +150,7 @@
         align-items: flex-end;
 
         padding: 0 5px;
-        font-weight: bold;
+        /*font-weight: bold;*/
 
     }
 
