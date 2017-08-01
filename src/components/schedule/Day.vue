@@ -9,9 +9,6 @@
                 v-bind:tsk="item"
                 @dayTaskDrag="change">
         </day-task>
-
-        <!--{{ startAtDate }} | {{ endAtDate }}-->
-        <div v-for="item in todo">{{item.date}}</div>
     </div>
 </template>
 
@@ -20,8 +17,8 @@
     import DayTask from './DayTask.vue';
     import {todoRef} from '../../firebase-module';
     import {firebase} from '../../firebase-module';
+    import {counterRef} from '../../firebase-module';
 
-    console.log(firebase);
 
     export default {
         name: '',
@@ -34,7 +31,7 @@
                 todo: []
             }
         },
-        props: ['dayOfWeek', 'obj', 'dayOfMonth', 'allDayTasks', 'isWeekend', 'selectedMonth'],
+        props: ['dayOfWeek', 'obj', 'dayOfMonth', 'isWeekend', 'selectedMonth'],
         components: {
             'day-task': DayTask
         },
@@ -67,7 +64,8 @@
                 var obj = {'val': val, 'arr': this.renderTask};
                 this.$emit('change', obj);
             }
-        },
+
+    },
 
         computed: {
             renderObject: function () {
@@ -84,33 +82,30 @@
 
             },
 
-            startAtDate: function () {
-                // january is 01
-                if (this.selectedMonth < 9) {
-                    return ('2017-0' + (this.selectedMonth + 1) + '-01');
-                } else if (this.selectedMonth >= 9) {
-                    return ('2017-' + (this.selectedMonth + 1) + '-01');
-                }
-            },
-            endAtDate: function () {
-                if (this.selectedMonth < 8) {
-                    return ('2017-0' + (this.selectedMonth + 1) + '-31');
-                } else if (this.selectedMonth == 11) {
-                    return '2017-12-31';
-                } else if (this.selectedMonth >= 8) {
-                    return ('2017-' + (this.selectedMonth + 1) + '-31');
-                }
-
-            }
+//            startAtDate: function () {
+//                // january is 01
+//                if (this.selectedMonth < 9) {
+//                    return ('2017-0' + (this.selectedMonth + 1) + '-01');
+//                } else if (this.selectedMonth >= 9) {
+//                    return ('2017-' + (this.selectedMonth + 1) + '-01');
+//                }
+//            },
+//            endAtDate: function () {
+//                if (this.selectedMonth < 8) {
+//                    return ('2017-0' + (this.selectedMonth + 1) + '-31');
+//                } else if (this.selectedMonth == 11) {
+//                    return '2017-12-31';
+//                } else if (this.selectedMonth >= 8) {
+//                    return ('2017-' + (this.selectedMonth + 1) + '-31');
+//                }
+//
+//            }
         }
         ,
         firebase: function () {
             return {
                 todo: {
-                    source: todoRef.orderByChild('date').startAt(this.startAtDate).endAt(this.endAtDate),
-                    cancelCallback (err) {
-                        console.log(err)
-                    }
+
                 }
             }
         }

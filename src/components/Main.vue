@@ -1,6 +1,8 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="main">
 
+        {{watchMonthNumOnDB}}
+        {{ selectedMonth }}
         <months
                 v-on:change="toggleBool"
                 v-on:selectCurrentMonth="saveSelectedMonth"
@@ -20,9 +22,9 @@
                         v-bind:vis="bool"
                         v-bind:wholeData="receivedData"
                         v-bind:receiveTaskTime="forScheduleTaskTime"
-                        v-bind:selectedMonth="selectedMonth"
                 >
                 </schedule>
+
         </div>
 
         <affairs
@@ -40,11 +42,12 @@
     import schedule from './schedule/Schedule.vue';
     import Affairs from './affairs/Affairs.vue';
     import {db} from '../firebase-module';
+    import {counterRef} from '../firebase-module';
 
-    var counterRef = db.ref('counter');
+
     var selectedMonthInDB = 3;
-
-    export default {
+    var main;
+    export default main = {
         name: '',
         data () {
             return {
@@ -55,7 +58,7 @@
                     time: ''
                 },
                 dayTaskForDelete: {},
-                selectedMonth: 5
+                selectedMonth: this.getMonthNumFromDB
             }
         },
         props: {
@@ -98,19 +101,23 @@
             },
 
             saveSelectedMonth: function (month) {
-                // add new number of month to db
-                counterRef.set({
-                    selected: month
-                });
+                if(month >= 0) {
+                    console.log('month was passed by click!');
+                    // add passed number of month to db
+                    counterRef.set({
+                        selected: month
+                    });
+                }
+                this.selectedMonth = month;
+                console.log('sel month: ' + this.selectedMonth);
+            },
 
-                // read stated number of month from db
-                counterRef.once('value', function (snap) {
-                    selectedMonthInDB = snap.val().selected;
-                });
+            clicked: function () {
+                console.log('click!')
+            },
 
-                this.selectedMonth = selectedMonthInDB;
-
-                console.log(selectedMonthInDB);
+            onError: function () {
+                alert('error');
             }
         },
         computed: {
@@ -121,6 +128,24 @@
 
             renderDayTaskForDelete: function () {
                 return this.dayTaskForDelete;
+            },
+
+            getMonthNumFromDB: function () {
+                console.log('getting month num from db...');
+
+                // read stated number of month from db
+                counterRef.once('value', function (snap) {
+                    console.log(snap.val().selected);
+                    return main.data().selectedMonth = (snap.val().selected);
+                });
+
+            },
+
+            watchMonthNumOnDB: function () {
+                return new Promise(function (resolve, reject) {
+                    return counterRef.on('value', main.computed.getMonthNumFromDB, main.methods.onError);
+                })
+
             }
         },
 
@@ -130,6 +155,9 @@
             }
         }
     }
+
+//    main.methods.clicked();
+
 </script>
 
 <style scoped>

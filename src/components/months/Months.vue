@@ -19,8 +19,10 @@
 
 
     import month from './Month.vue';
+    import {counterRef} from '../../firebase-module';
 
-    export default {
+    var main;
+    export default main = {
         name: 'Months',
         data () {
             return {
@@ -34,12 +36,13 @@
         methods: {
             selectCurrentMonth: function (month) {
                 this.$emit('selectCurrentMonth', month)
+            },
+
+            onError: function () {
+                console.log('sss')
             }
         },
         computed: {
-            curMonth: function () {
-                return a;
-            }
         }
     }
 

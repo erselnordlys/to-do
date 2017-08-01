@@ -3,7 +3,10 @@
 import Vue from 'vue'
 import App from './App.vue'
 import VueFire from 'vuefire'
+// import VueComputedPromise from 'vue-computed-promise'
 
+const VueComputedPromise = require('vue-computed-promise'); // alternatively use script tag
+Vue.use(VueComputedPromise);
 
 // var Vue = require('vue');
 // var VueFire = require('');

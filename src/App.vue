@@ -1,12 +1,6 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="app">
 
-        <!--<ol>-->
-            <!--<div v-for="item in todo">-->
-                <!--{{item['.key']}}. {{item.name}} {{item.duration}}h-->
-            <!--</div>-->
-        <!--</ol>-->
-
         <my-main v-bind:receivedData="todo"></my-main>
     </div>
 </template>
@@ -14,16 +8,10 @@
 <script>
 
 
+
     import {todoRef} from './firebase-module';
 
     import Main from './components/Main.vue';
-
-//    var newTodoItemRef = todoRef.push();
-//    newTodoItemRef.set({
-//        'duration': 100
-//    });
-
-
 
     export default {
         name: 'app',
