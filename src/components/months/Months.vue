@@ -1,6 +1,8 @@
 <template>
     <div>
         <h1>TO-DO</h1>
+        month:
+        {{ selectedMonth}}
 
         <ul id="months">
             <month 

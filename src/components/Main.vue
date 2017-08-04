@@ -1,12 +1,11 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="main">
 
-        {{watchMonthNumOnDB}}
-        {{ selectedMonth }}
+        {{ getMonthNumFromDB }}
         <months
                 v-on:change="toggleBool"
                 v-on:selectCurrentMonth="saveSelectedMonth"
-                v-bind:selectedMonth="selectedMonth"
+                v-bind:selectedMonth="getMonthNumFromDB"
         >
         </months>
 
@@ -45,7 +44,6 @@
     import {counterRef} from '../firebase-module';
 
 
-    var selectedMonthInDB = 3;
     var main;
     export default main = {
         name: '',
@@ -57,8 +55,7 @@
                     task: '',
                     time: ''
                 },
-                dayTaskForDelete: {},
-                selectedMonth: this.getMonthNumFromDB
+                dayTaskForDelete: {}
             }
         },
         props: {
@@ -108,8 +105,8 @@
                         selected: month
                     });
                 }
-                this.selectedMonth = month;
-                console.log('sel month: ' + this.selectedMonth);
+//                this.selectedMonth = month;
+//                console.log('sel month: ' + this.selectedMonth);
             },
 
             clicked: function () {
@@ -132,17 +129,28 @@
 
             getMonthNumFromDB: function () {
                 console.log('getting month num from db...');
+                let x;
+                return new Promise(function (resolve, reject) {
 
-                // read stated number of month from db
-                counterRef.once('value', function (snap) {
-                    console.log(snap.val().selected);
-                    return main.data().selectedMonth = (snap.val().selected);
-                });
-
+                    // get month num from db
+                    counterRef.once('value', function (snap) {
+                        console.log(snap.val().selected);
+                        x = snap.val().selected;
+                    }).then(
+                        result => {
+                            console.log(x);
+                            resolve(x);
+                        },
+                        error => {
+                            console.log('error')
+                        }
+                    );
+                })
             },
 
             watchMonthNumOnDB: function () {
                 return new Promise(function (resolve, reject) {
+                    console.log('watcher');
                     return counterRef.on('value', main.computed.getMonthNumFromDB, main.methods.onError);
                 })
 
@@ -157,6 +165,7 @@
     }
 
 //    main.methods.clicked();
+//    window.onload = main.computed.watchMonthNumOnDB();
 
 </script>
 

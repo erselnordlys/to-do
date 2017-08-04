@@ -3,7 +3,6 @@
 
         <div v-for="item in todo">{{item.name}}</div>
         {{selectedMonth}}
-        <!--{{sel}}-->
         {{sortedTasks}}
         <day
                 v-bind:isWeekend="(item == 'sat') || ( item == 'sun')"
@@ -85,8 +84,6 @@
                  );
             },
 
-
-
             sortTasksByMonth: function (month) {
                 console.log('sorting started' + month);
                 let sorted = [];
@@ -141,8 +138,6 @@
 
             sortedTasks: function () {
                 let monthNum;
-//                    = this.$props.selectedMonth;
-
                 return new Promise(function (resolve, reject) {
 
                     // get month number from database
