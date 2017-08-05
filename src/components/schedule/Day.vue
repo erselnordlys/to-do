@@ -15,9 +15,9 @@
 <script>
 
     import DayTask from './DayTask.vue';
-    import {todoRef} from '../../firebase-module';
-    import {firebase} from '../../firebase-module';
-    import {counterRef} from '../../firebase-module';
+//    import {todoRef} from '../../firebase-module';
+//    import {firebase} from '../../firebase-module';
+//    import {counterRef} from '../../firebase-module';
 
 
     export default {
@@ -73,13 +73,12 @@
             },
 
             renderTask: function () {
-                var arr = [];
+                let arr = [];
 
-                for (var key in this.smth) {
+                for (let key in this.smth) {
                     arr.push(key + ' ' + this.smth[key] + 'h');
-                    return arr;
                 }
-
+                return arr;
             },
 
 //            startAtDate: function () {
@@ -101,14 +100,14 @@
 //
 //            }
         }
-        ,
-        firebase: function () {
-            return {
-                todo: {
-
-                }
-            }
-        }
+//        ,
+//        firebase: function () {
+//            return {
+//                todo: {
+//
+//                }
+//            }
+//        }
     }
 
 </script>

@@ -1,13 +1,15 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="main">
 
-        {{ getMonthNumFromDB }}
+        <!--{{selectedMonth}}-->
         <months
                 v-on:change="toggleBool"
                 v-on:selectCurrentMonth="saveSelectedMonth"
-                v-bind:selectedMonth="getMonthNumFromDB"
+                v-bind:selectedMonth="selectedMonth"
         >
         </months>
+
+        <!--{{sortedTasks}}-->
 
         <div v-if="!bool">choose the month</div>
 
@@ -21,6 +23,7 @@
                         v-bind:vis="bool"
                         v-bind:wholeData="receivedData"
                         v-bind:receiveTaskTime="forScheduleTaskTime"
+                        v-bind:selectedMonth="selectedMonth"
                 >
                 </schedule>
 
@@ -41,10 +44,10 @@
     import schedule from './schedule/Schedule.vue';
     import Affairs from './affairs/Affairs.vue';
     import {db} from '../firebase-module';
-    import {counterRef} from '../firebase-module';
+    import {todoRef} from '../firebase-module';
 
 
-    var main;
+    let main;
     export default main = {
         name: '',
         data () {
@@ -55,7 +58,8 @@
                     task: '',
                     time: ''
                 },
-                dayTaskForDelete: {}
+                dayTaskForDelete: {},
+                selectedMonth: 6,
             }
         },
         props: {
@@ -98,27 +102,12 @@
             },
 
             saveSelectedMonth: function (month) {
-                if(month >= 0) {
-                    console.log('month was passed by click!');
-                    // add passed number of month to db
-                    counterRef.set({
-                        selected: month
-                    });
-                }
-//                this.selectedMonth = month;
-//                console.log('sel month: ' + this.selectedMonth);
-            },
-
-            clicked: function () {
-                console.log('click!')
-            },
-
-            onError: function () {
-                alert('error');
+                this.selectedMonth = month;
+                console.log("selected month: " + this.selectedMonth)
             }
+
         },
         computed: {
-
             forScheduleTaskTime: function () {
                 return this.taskTimeReceived;
             },
@@ -127,46 +116,47 @@
                 return this.dayTaskForDelete;
             },
 
-            getMonthNumFromDB: function () {
-                console.log('getting month num from db...');
-                let x;
-                return new Promise(function (resolve, reject) {
 
-                    // get month num from db
-                    counterRef.once('value', function (snap) {
-                        console.log(snap.val().selected);
-                        x = snap.val().selected;
-                    }).then(
-                        result => {
-                            console.log(x);
-                            resolve(x);
-                        },
-                        error => {
-                            console.log('error')
+            sortedTasks: function () {
+                let data = this.todo;
+                let size = Object.keys(data).length;
+                let month = this.selectedMonth;
+                let sorted = [];
+
+                for (let key in data) {
+                    if (data[key].hasOwnProperty('month')) {
+
+                        let dBMonth = data[key].month;
+                        if (dBMonth == month) {
+                            let elem = {};
+                            elem.name = data[key].name;
+                            elem.duration = data[key].duration;
+                            elem.month = dBMonth;
+                            elem.day = data[key].day;
+
+                            sorted.push(elem);
                         }
-                    );
-                })
-            },
 
-            watchMonthNumOnDB: function () {
-                return new Promise(function (resolve, reject) {
-                    console.log('watcher');
-                    return counterRef.on('value', main.computed.getMonthNumFromDB, main.methods.onError);
-                })
+                    }
+                }
+
+                return sorted;
 
             }
         },
 
         firebase: {
-            counter: {
-                source: counterRef
+            todo: {
+                source: todoRef,
+                asObject: true,
+                cancelCallback: function () {
+                    console.log('error')
+                }
             }
-        }
+        },
     }
 
-//    main.methods.clicked();
-//    window.onload = main.computed.watchMonthNumOnDB();
-
+//    window.onload = main.methods.getFullData();
 </script>
 
 <style scoped>
