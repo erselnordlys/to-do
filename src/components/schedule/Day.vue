@@ -1,6 +1,10 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="day"
-         @drop="append">
+         @drop="append"
+         >
+
+        {{vis}}
+        <!--{{putReceivedDataInDay}}-->
         <div class="num-of-day" v-bind:class="{ weekend: isWeekend }"> {{ dayOfMonth + ' ' + dayOfWeek }}</div>
         <day-task
                 v-if="vis"
@@ -9,29 +13,31 @@
                 v-bind:tsk="item"
                 @dayTaskDrag="change">
         </day-task>
+
+
+        <!--v-for="item in renderTask"-->
+
     </div>
 </template>
 
 <script>
 
     import DayTask from './DayTask.vue';
-//    import {todoRef} from '../../firebase-module';
-//    import {firebase} from '../../firebase-module';
-//    import {counterRef} from '../../firebase-module';
 
-
-    export default {
+    let main;
+    export default main = {
         name: '',
         data () {
             return {
-                tasks: {},
-                smth: {},
+                constArrayOfTasks: {},
+                final: {},
                 arr: [1, 2, 3, 4, 5],
-                vis: false,
-                todo: []
+//                vis: true,
+                todo: [],
+                x: ''
             }
         },
-        props: ['dayOfWeek', 'obj', 'dayOfMonth', 'isWeekend', 'selectedMonth'],
+        props: ['dayOfWeek', 'obj', 'dayOfMonth', 'isWeekend', 'sortedTasks', 'taskFromDB'],
         components: {
             'day-task': DayTask
         },
@@ -42,22 +48,24 @@
                 if ((this.renderObject.task !== '') && (this.renderObject.time !== '')
                     && (this.renderObject.task !== undefined) && (this.renderObject.time !== undefined)) {
 
-                    if (this.tasks[this.renderObject.task] !== undefined) {
+                    if (this.constArrayOfTasks[this.renderObject.task] !== undefined) {
                         // summarize stated time
-                        this.tasks[this.renderObject.task] += this.renderObject.time;
+                        this.constArrayOfTasks[this.renderObject.task] += this.renderObject.time;
                     } else {
                         // give a time value
-                        this.tasks[this.renderObject.task] = this.renderObject.time;
+                        this.constArrayOfTasks[this.renderObject.task] = this.renderObject.time;
                     }
-                    this.vis = true;
+//                    this.vis = true;
                 }
 
 
-                this.smth = {};
-                this.smth = this.tasks;
-                console.log(this.tasks);
+                this.final = {};
+                this.final = this.constArrayOfTasks;
+                console.log(this.dayOfMonth);
+                console.log(this.constArrayOfTasks);
 
                 console.log(this.renderTask);
+
             },
 
             change: function (val) {
@@ -65,50 +73,64 @@
                 this.$emit('change', obj);
             }
 
-    },
+        },
 
         computed: {
             renderObject: function () {
                 return this.obj;
             },
 
+            putReceivedDataInDay: function () {
+                let tasks = this.sortedTasks;
+                let day = this.dayOfMonth;
+                for (let key in tasks) {
+                    if (tasks[key].day == day) {
+
+                        if (this.constArrayOfTasks[tasks[key].name] !== undefined) {
+                            // summarize stated time
+                            this.constArrayOfTasks[tasks[key].name] += tasks[key].duration;
+                        } else {
+                            // give a time value
+                            this.constArrayOfTasks[tasks[key].name] = tasks[key].duration;
+                        }
+
+                        this.final = {};
+                       return this.final = this.constArrayOfTasks;
+//                        return this.final[tasks[key].name] = tasks[key].duration;
+                    }
+                }
+            },
+
             renderTask: function () {
                 let arr = [];
 
-                for (let key in this.smth) {
-                    arr.push(key + ' ' + this.smth[key] + 'h');
+                // read from final
+                for (let key in this.final) {
+                    console.log('push');
+                    arr.push(key + ' ' + this.final[key] + 'h');
                 }
-                return arr;
+
+                    console.log(this.final);
+                        return arr;
             },
 
-//            startAtDate: function () {
-//                // january is 01
-//                if (this.selectedMonth < 9) {
-//                    return ('2017-0' + (this.selectedMonth + 1) + '-01');
-//                } else if (this.selectedMonth >= 9) {
-//                    return ('2017-' + (this.selectedMonth + 1) + '-01');
-//                }
-//            },
-//            endAtDate: function () {
-//                if (this.selectedMonth < 8) {
-//                    return ('2017-0' + (this.selectedMonth + 1) + '-31');
-//                } else if (this.selectedMonth == 11) {
-//                    return '2017-12-31';
-//                } else if (this.selectedMonth >= 8) {
-//                    return ('2017-' + (this.selectedMonth + 1) + '-31');
-//                }
-//
-//            }
+            vis: function () {
+                let data = this.putReceivedDataInDay;
+                let task = this.renderTask;
+                console.log(task);
+                if ( ((data == undefined) || (data == '') || (data == null) )
+                    &&  ( (task == undefined) || (task == '') || (task == null)) ) {
+                    console.log('it will be false');
+                    return false;
+                } else {
+                    console.log('it will be true');
+
+                    return true;
+                }
+            }
         }
-//        ,
-//        firebase: function () {
-//            return {
-//                todo: {
-//
-//                }
-//            }
-//        }
     }
+
 
 </script>
 

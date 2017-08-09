@@ -21,9 +21,9 @@
                 <schedule
                         @dragDayTask="saveDayTask"
                         v-bind:vis="bool"
-                        v-bind:wholeData="receivedData"
                         v-bind:receiveTaskTime="forScheduleTaskTime"
                         v-bind:selectedMonth="selectedMonth"
+                        v-bind:sortedTasks="sortedTasks"
                 >
                 </schedule>
 
@@ -59,7 +59,7 @@
                     time: ''
                 },
                 dayTaskForDelete: {},
-                selectedMonth: 6,
+                selectedMonth: 3,
             }
         },
         props: {
