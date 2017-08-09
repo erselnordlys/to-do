@@ -9,6 +9,7 @@
                 v-bind:obj="receiveTaskTime"
                 @change="dragDayTask"
                 v-bind:sortedTasks="sortedTasks"
+                @sendDataToSchedule="getFromDayAndPushData"
         >
         </day>
 
@@ -28,7 +29,8 @@
         data () {
             return {
                 weekDay: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'],
-                startDayOfWeek: [6, 2, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4]
+                startDayOfWeek: [6, 2, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4],
+                newTask: {name: '', day: 0, month: 0, duration: 0}
             }
         },
 
@@ -37,6 +39,19 @@
         methods: {
             dragDayTask: function (obj) {
                 this.$emit('dragDayTask', obj);
+            },
+
+            getFromDayAndPushData: function (arr) {
+                console.log(arr);
+
+                for (let i = 0; i < arr.length; i++) {
+                    this.newTask.name = arr[i].name;
+                    this.newTask.duration = arr[i].duration;
+                    this.newTask.month = this.selectedMonth;
+                    this.newTask.day = arr[i].day;
+                }
+                console.log(this.newTask);
+                todoRef.push(this.newTask);
             }
         },
         components: {
