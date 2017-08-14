@@ -73,12 +73,10 @@
                         obj.name = key;
                         obj.duration = this.final[key];
                         obj.day = day;
-//                        console.log(obj);
                         send.push(obj);
                     }
                 }
 
-//                console.log(send);
                 this.$emit('sendDataToSchedule', send);
             },
 

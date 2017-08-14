@@ -1,6 +1,5 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="schedule" v-if="vis">
-        <button v-on:click="show">BUTTON SHOW</button>
         <day
                 v-bind:isWeekend="(item == 'sat') || ( item == 'sun')"
                 v-bind:selectedMonth="selectedMonth"
@@ -43,34 +42,36 @@
                 this.$emit('dragDayTask', obj);
             },
 
-            show: function () {
-
-                for (let key in this.todo) {
-                    console.log(this.todo[key].day);
-                }
-            },
-
             getFromDayAndPushData: function (arr) {
 
+                // gather new task
                 this.newTask.name = arr[0].name;
                 this.newTask.duration = arr[0].duration;
                 this.newTask.month = this.selectedMonth;
                 this.newTask.day = arr[0].day;
 
-                let child;
+                let child = '';
+
                 // founding requested task in db
                 for (let key in this.todo) {
-                    console.log(key);
+
+                    // if task already exists and should be updated
                     if ((this.todo[key].day == arr[0].day) && (this.todo[key].name == arr[0].name)) {
+                        console.log('task exists, updating...');
                         child = this.todo[key]['.key'];
                         db.ref('todo/' + child).set(this.newTask);
-                    } else {
-                        todoRef.push(this.newTask);
+
                     }
                 }
-                // update data on db
+
+                // if new task should be crated
+                if (child == '') {
+                    console.log('create new');
+                    todoRef.push(this.newTask);
+                }
             }
         },
+
         components: {
             day: Day
         },
