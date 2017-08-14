@@ -1,5 +1,6 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="schedule" v-if="vis">
+        <button v-on:click="show">BUTTON SHOW</button>
         <day
                 v-bind:isWeekend="(item == 'sat') || ( item == 'sun')"
                 v-bind:selectedMonth="selectedMonth"
@@ -21,6 +22,7 @@
     import Day from './Day.vue';
     import {todoRef} from '../../firebase-module';
     import {counterRef} from '../../firebase-module';
+    import {db} from '../../firebase-module';
 
 
     let main;
@@ -41,17 +43,32 @@
                 this.$emit('dragDayTask', obj);
             },
 
-            getFromDayAndPushData: function (arr) {
-                console.log(arr);
+            show: function () {
 
-                for (let i = 0; i < arr.length; i++) {
-                    this.newTask.name = arr[i].name;
-                    this.newTask.duration = arr[i].duration;
-                    this.newTask.month = this.selectedMonth;
-                    this.newTask.day = arr[i].day;
+                for (let key in this.todo) {
+                    console.log(this.todo[key].day);
                 }
-                console.log(this.newTask);
-                todoRef.push(this.newTask);
+            },
+
+            getFromDayAndPushData: function (arr) {
+
+                this.newTask.name = arr[0].name;
+                this.newTask.duration = arr[0].duration;
+                this.newTask.month = this.selectedMonth;
+                this.newTask.day = arr[0].day;
+
+                let child;
+                // founding requested task in db
+                for (let key in this.todo) {
+                    console.log(key);
+                    if ((this.todo[key].day == arr[0].day) && (this.todo[key].name == arr[0].name)) {
+                        child = this.todo[key]['.key'];
+                        db.ref('todo/' + child).set(this.newTask);
+                    } else {
+                        todoRef.push(this.newTask);
+                    }
+                }
+                // update data on db
             }
         },
         components: {
