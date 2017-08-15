@@ -34,7 +34,7 @@
                 <div class="results__msg"> {{ msgs.msgResults }}
                     <div class="results">
                         <res
-                                v-for="item in onTasks"
+                                v-for="item in totalResults"
                                 v-bind:resName="item"></res>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
                 deleteDayTaskTemp: {}
             }
         },
-        props: ['show', 'task', 'passTaskTime', 'vals', 'taskToDelete'],
+        props: ['show', 'task', 'passTaskTime', 'vals', 'taskToDelete', 'selectedMonth'],
         components: {
             task: Task,
             duration: Time,
@@ -224,8 +224,29 @@
                 return this.res;
             },
 
-            onTasks: function () {
-                return this.tasks;
+            totalResults: function () {
+                let arr = [];
+                let result = {};
+                let tasks = this.tasks;
+
+                delete this.todo['.key'];
+                // take every task from stated tasks
+                for (let key in tasks) {
+
+                    let totalHours = 0;
+                    let task = tasks[key];
+
+                    // check every to-do object in DB, take needed hours for a current task
+                    for (let key in this.todo) {
+                        if ((this.todo[key].name == task) && (this.todo[key].month == this.selectedMonth) ) {
+                            totalHours += this.todo[key].duration;
+                        }
+                        // put task: total time in the common object
+                        result[task] = totalHours;
+                    }
+                    arr.push(task + ': ' + totalHours + 'h');
+                }
+                return arr;
             },
 
             getTasksAndDurationsFromDB: function () {

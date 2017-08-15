@@ -30,6 +30,7 @@
 
         <panel
                 @changeDropped="dropIsFalse"
+                v-bind:selectedMonth="selectedMonth"
                 v-bind:show="bool"
                 v-bind:vals="dropped"
                 v-on:dragTaskTime="saveTaskTime"
@@ -150,7 +151,7 @@
                 let todo = this.todo;
                 delete todo['.key'];
                 for (let key in todo) {
-                    console.log(todo[key]);
+//                    console.log(todo[key]);
                 }
             }
         },
