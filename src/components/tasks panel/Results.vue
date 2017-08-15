@@ -10,7 +10,7 @@
         name: '',
         data () {
             return {
-                sum: 'x'
+                sum: 0
             }
         },
         props: ['resName']

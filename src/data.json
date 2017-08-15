@@ -15,3 +15,5 @@
 { ".key":
 { "day": 11,
 "duration": 1, "month": 3, "name": "diploma" }, "name": "diploma", "duration": 1, "month": 3, "day": 11 }
+
+["sports", "web", "French", "household", "therapy", "rest"]
