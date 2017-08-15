@@ -15,7 +15,7 @@
 
         methods:  {
             dragged: function () {
-                this.$emit('dayTaskDrag', this.tsk);
+                this.$emit('dayTaskDrag');
 
             }
         }

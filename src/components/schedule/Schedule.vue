@@ -38,36 +38,49 @@
         props: ['vis', 'receiveTaskTime', 'selectedMonth', 'sortedTasks'],
 
         methods: {
-            dragDayTask: function (obj) {
-                this.$emit('dragDayTask', obj);
+            dragDayTask: function (arr) {
+
+                let pass = {
+                    name: '',
+                    duration: 0,
+                    day: arr[1],
+                    month: this.selectedMonth
+                };
+
+                for (let key in arr[0]) {
+                    pass.name = key;
+                    pass.duration = arr[0][key];
+                }
+                this.$emit('dragDayTask', pass);
             },
 
             getFromDayAndPushData: function (arr) {
 
-                // gather new task
-                this.newTask.name = arr[0].name;
-                this.newTask.duration = arr[0].duration;
-                this.newTask.month = this.selectedMonth;
-                this.newTask.day = arr[0].day;
+                // if received arr is not empty
+                if (arr[0] !== undefined) {
 
-                let child = '';
+                    //gather new task
+                    this.newTask.name = arr[0].name;
+                    this.newTask.duration = arr[0].duration;
+                    this.newTask.month = this.selectedMonth;
+                    this.newTask.day = arr[0].day;
 
-                // founding requested task in db
-                for (let key in this.todo) {
+                    let child = '';
 
-                    // if task already exists and should be updated
-                    if ((this.todo[key].day == arr[0].day) && (this.todo[key].name == arr[0].name)) {
-                        console.log('task exists, updating...');
-                        child = this.todo[key]['.key'];
-                        db.ref('todo/' + child).set(this.newTask);
+                    // founding requested task in db
+                    for (let key in this.todo) {
 
+                        // if task already exists and should be updated
+                        if ((this.todo[key].day == arr[0].day) && (this.todo[key].name == arr[0].name)) {
+                            child = this.todo[key]['.key'];
+                            db.ref('todo/' + child).set(this.newTask);
+                        }
                     }
-                }
 
-                // if new task should be crated
-                if (child == '') {
-                    console.log('create new');
-                    todoRef.push(this.newTask);
+                    // if new task should be crated
+                    if (child == '') {
+                        todoRef.push(this.newTask);
+                    }
                 }
             }
         },
@@ -102,9 +115,11 @@
             }
         },
 
-        firebase: {
-                todo: {
-                    source: todoRef
+        firebase () {
+                return {
+                    todo: {
+                        source: todoRef
+                    }
                 }
         }
     }

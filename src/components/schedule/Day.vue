@@ -13,7 +13,6 @@
                 @dayTaskDrag="change">
         </day-task>
 
-
     </div>
 </template>
 
@@ -39,7 +38,8 @@
 
         methods: {
             append: function () {
-                let appended ={};
+                let appended = {};
+
                 // fill tasks from obj
                 if ((this.renderObject.task !== '') && (this.renderObject.time !== '')
                     && (this.renderObject.task !== undefined) && (this.renderObject.time !== undefined)) {
@@ -60,8 +60,9 @@
                 this.final = this.constArrayOfTasks;
 
                 // send appended tasks to schedule (database)
-                this.sendDataToSchedule(appended);
+                    this.sendDataToSchedule(appended);
             },
+            // надо сделать чтобы удалялись задания нормально и не было ошибки при перетаскивании без удаления
 
             sendDataToSchedule: function (local) {
                 // send data to schedule
@@ -81,8 +82,8 @@
             },
 
             change: function (val) {
-                let obj = {'val': val, 'arr': this.renderTask};
-                this.$emit('change', obj);
+               let arr = [this.final, this.dayOfMonth];
+                this.$emit('change', arr);
             }
 
         },
@@ -95,6 +96,7 @@
             putReceivedDataInDay: function () {
                 let tasks = this.sortedTasks;
                 let day = this.dayOfMonth;
+                this.constArrayOfTasks = {};
 
                 // iterate through task-objects array
                 for (let i = 0; i < tasks.length; i++) {

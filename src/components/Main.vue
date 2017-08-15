@@ -1,15 +1,12 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="main">
 
-        <!--{{selectedMonth}}-->
         <months
                 v-on:change="toggleBool"
                 v-on:selectCurrentMonth="saveSelectedMonth"
                 v-bind:selectedMonth="selectedMonth"
         >
         </months>
-
-        <!--{{sortedTasks}}-->
 
         <div v-if="!bool">choose the month</div>
 
@@ -29,12 +26,12 @@
 
         </div>
 
-        <affairs
+        <panel
                 v-bind:show="bool"
                 v-bind:vals="dropped"
                 v-on:dragTaskTime="saveTaskTime"
-                v-bind:deleteDT="renderDayTaskForDelete">
-        </affairs>
+                v-bind:taskToDelete="renderDayTaskForDelete">
+        </panel>
     </div>
 </template>
 
@@ -42,7 +39,7 @@
 
     import months from './months/Months.vue';
     import schedule from './schedule/Schedule.vue';
-    import Affairs from './affairs/Affairs.vue';
+    import TasksPanel from './tasks panel/Tasks-Panel.vue';
     import {db} from '../firebase-module';
     import {todoRef} from '../firebase-module';
 
@@ -59,7 +56,7 @@
                     time: ''
                 },
                 dayTaskForDelete: {},
-                selectedMonth: 3,
+                selectedMonth: 3
             }
         },
         props: {
@@ -68,7 +65,7 @@
         components: {
             months: months,
             schedule: schedule,
-            affairs: Affairs
+            panel: TasksPanel
         },
         methods: {
             toggleBool: function () {
@@ -97,8 +94,7 @@
 
             saveDayTask: function (obj) {
                 this.dayTaskForDelete = obj;
-//                console.log(this.renderDayTaskForDelete);
-
+//                console.log(obj);
             },
 
             saveSelectedMonth: function (month) {
@@ -145,18 +141,20 @@
             }
         },
 
-        firebase: {
-            todo: {
-                source: todoRef,
-                asObject: true,
-                cancelCallback: function () {
-                    console.log('error')
+        firebase () {
+            return {
+                todo: {
+                    source: todoRef,
+                    asObject: true,
+                    cancelCallback: function () {
+                        console.log('error')
+                    }
                 }
             }
+
         },
     }
 
-//    window.onload = main.methods.getFullData();
 </script>
 
 <style scoped>
