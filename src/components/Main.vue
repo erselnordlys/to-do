@@ -94,7 +94,6 @@
 
             saveDayTask: function (obj) {
                 this.dayTaskForDelete = obj;
-//                console.log(obj);
             },
 
             saveSelectedMonth: function (month) {

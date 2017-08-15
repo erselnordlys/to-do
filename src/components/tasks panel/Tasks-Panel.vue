@@ -3,6 +3,7 @@
 
         <div class="row-group">
 
+            {{getTasksAndDurationsFromDB}}
             <!--new task drag, tasks list-->
             <div class="column-group">
 
@@ -14,7 +15,12 @@
                 <!--tasks list-->
                 <div class="tasks__msg">{{ msgTasks }}
                     <div class="tasks">
-                        <task v-for="item in onTasks" @dragTask="getTask" v-bind:task="item" id="task"></task>
+                        <task
+                                v-for="item in t"
+                                @dragTask="getTask"
+                                v-bind:task="item"
+                                id="task"
+                        ></task>
                     </div>
                 </div>
 
@@ -26,7 +32,11 @@
                 <!--time list-->
                 <div class="time__msg">{{ msgTime }}
                     <div class="time">
-                        <duration @dragTime="getTime" v-for="item in time" v-bind:hours="item"></duration>
+                        <duration
+                                @dragTime="getTime"
+                                v-for="item in d"
+                                v-bind:hours="item"
+                        ></duration>
                     </div>
                 </div>
 
@@ -74,6 +84,9 @@
                 msgTime: 'How much time did it take?',
                 msgResults: 'Your results this month',
                 msgDelete: 'Delete task',
+
+                t: [],
+                d: [],
 
                 tasks: {
                     sports: 'sports',
@@ -174,34 +187,6 @@
                 }
 
                 this.$emit('deleteFromFinal');
-
-
-//                if(this.renderdeleteDTTemp == {}) {
-//                    var newObj = this.tasks;
-//                    this.tasks = {};
-//
-//                    delete newObj[this.temp.task]; // таск который удаляется в этот момент
-//
-//                    for (var key in newObj) {
-//                        this.tasks[key] = key;
-//                    }
-//                    // delete task from task-time block if dragged
-//                    if (this.temp.task == this.res.task)  {
-//                        this.res.task = '';
-//                        this.res.time = '';
-//                    }
-//                    this.temp.task = '';
-//
-//                } else {
-//                    // delete daytask
-//
-////                    this.renderdeleteDTTemp = this.deleteDT;
-//                    this.deleteDayTaskTemp = this.taskToDelete;
-//                    console.log(this.taskToDelete);
-
-//                }
-
-
             }
 
         },
@@ -213,6 +198,14 @@
 
             onTasks: function () {
                 return this.tasks;
+            },
+
+            getTasksAndDurationsFromDB: function () {
+                let data = this.statedData;
+//                let durations = data.durations;
+//                let tasks = data.tasks;
+                this.t = data.tasks;
+                this.d = data.durations;
             }
         },
 
@@ -223,6 +216,14 @@
                     asObject: true,
                     cancelCallback: function () {
                         console.log('error')
+                    }
+                },
+
+                statedData: {
+                    source: db.ref('stated-data'),
+                    asObject: true,
+                    cancelCallback: function () {
+                        console.log('error');
                     }
                 }
             }
