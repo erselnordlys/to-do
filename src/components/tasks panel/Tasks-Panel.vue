@@ -117,6 +117,7 @@
             'del-block': Delete
         },
         methods: {
+            // when dropped on a drag-block
             drop: function () {
                 // add values to results when dropped
                 if (this.temp.task !== '') {
@@ -171,45 +172,47 @@
 
             deleteTask: function () {
 
-                // delete task from drag-block
-                this.res = {task: '', time: ''};
-                // for tasks+durations from schedule
-                if (this.taskToDelete.day !== 0) {
-                    console.log('delete task from schedule');
+                if (confirm('Are you sure you want to delete this task? Your total hours will be erased.')) {
 
-                    let name = this.taskToDelete.name;
-                    let duration = this.taskToDelete.duration;
-                    let month = this.taskToDelete.month;
-                    let day = this.taskToDelete.day;
+                    // delete task from drag-block
+                    this.res = {task: '', time: ''};
+                    // for tasks+durations from schedule
+                    if (this.taskToDelete.day !== 0) {
+                        console.log('delete task from schedule');
 
-                    for (let key in this.todo) {
-                        if ( (this.todo[key].name == name) && (this.todo[key].duration == duration) &&
-                            (this.todo[key].month == month) && (this.todo[key].day == day) ) {
-                            console.log(key);
-                            db.ref('todo/' + key).remove();
+                        let name = this.taskToDelete.name;
+                        let duration = this.taskToDelete.duration;
+                        let month = this.taskToDelete.month;
+                        let day = this.taskToDelete.day;
+
+                        for (let key in this.todo) {
+                            if ((this.todo[key].name == name) && (this.todo[key].duration == duration) &&
+                                (this.todo[key].month == month) && (this.todo[key].day == day)) {
+                                console.log(key);
+                                db.ref('todo/' + key).remove();
+                            }
                         }
-                    }
-                    this.$emit('deleteFromFinal');
-                    this.taskToDelete.name = '';
-                    this.taskToDelete.duration = '';
+                        this.$emit('deleteFromFinal');
+                        this.taskToDelete.name = '';
+                        this.taskToDelete.duration = '';
 
 
-                } else if (this.taskToDelete.name !== ''){
+                    } else if (this.taskToDelete.name !== '') {
 
-                    // to delete stated task
-                    console.log('delete another task');
-                    let toDelete = this.taskToDelete.name; // web
-                    let arr = this.statedTasks;
-                    delete arr['.key'];
+                        // to delete stated task
+                        console.log('delete another task');
+                        let toDelete = this.taskToDelete.name; // web
+                        let arr = this.statedTasks;
+                        delete arr['.key'];
 
-                    for (let key in arr) {
-                        if(arr[key] == toDelete) {
-                            db.ref('stated-data/tasks/' + key).remove();
+                        for (let key in arr) {
+                            if (arr[key] == toDelete) {
+                                db.ref('stated-data/tasks/' + key).remove();
+                            }
                         }
+
+                        this.taskToDelete.name = '';
                     }
-
-                    this.taskToDelete.name = '';
-
                 }
             }
 
@@ -227,10 +230,22 @@
             totalResults: function () {
                 let arr = [];
                 let result = {};
-                let tasks = this.tasks;
+//                let tasks = this.tasks;
+                let tasks = [];
 
-                delete this.todo['.key'];
+                //get only tasks of this month
+
+                for (let key in this.todo) {
+                    if (this.todo[key].month == this.selectedMonth)  {
+                       if ( tasks.indexOf(this.todo[key].name) == -1) {
+                           tasks.push(this.todo[key].name);
+                       }
+                    }
+                }
+                console.log(tasks);
+
                 // take every task from stated tasks
+                delete this.todo['.key'];
                 for (let key in tasks) {
 
                     let totalHours = 0;
@@ -244,8 +259,9 @@
                         // put task: total time in the common object
                         result[task] = totalHours;
                     }
-                    arr.push(task + ': ' + totalHours + 'h');
+                    arr.push(task.charAt(0).toUpperCase() + task.slice(1) + ': ' + totalHours + ' h');
                 }
+
                 return arr;
             },
 

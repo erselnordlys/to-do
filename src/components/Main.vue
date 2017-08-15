@@ -84,15 +84,10 @@
 
                if (this.taskTimeReceived.task !== undefined && this.taskTimeReceived.time !== undefined
                     && this.taskTimeReceived.task !== '' && this.taskTimeReceived.time !== '') {
-                   console.log('drop occured');
                    this.dropped = true;
                 } else {
-                   console.log('error');
                    this.dropped = false;
                }
-
-               console.log(this.dropped);
-
                 this.taskTimeReceived = { task: '', time: ''}
             },
 
@@ -106,7 +101,6 @@
 
             saveSelectedMonth: function (month) {
                 this.selectedMonth = month;
-                console.log("selected month: " + this.selectedMonth)
             }
 
         },
@@ -151,7 +145,6 @@
                 let todo = this.todo;
                 delete todo['.key'];
                 for (let key in todo) {
-//                    console.log(todo[key]);
                 }
             }
         },
