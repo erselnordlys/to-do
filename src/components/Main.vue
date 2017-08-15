@@ -48,8 +48,7 @@
     import {todoRef} from '../firebase-module';
 
 
-    let main;
-    export default main = {
+    export default {
         name: '',
         data () {
             return {

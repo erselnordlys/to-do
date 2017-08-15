@@ -3,15 +3,16 @@
          @drop="append"
          >
 
+        {{getDate}}
         <div style="display:none">{{vis}}</div>
         <div class="num-of-day" v-bind:class="{ weekend: isWeekend }"> {{ dayOfMonth + ' ' + dayOfWeek }}</div>
         <day-task
                 v-if="vis"
-                class="task"
                 v-for="item in renderTask"
                 v-bind:tsk="item"
                 @dayTaskDrag="change">
         </day-task>
+
 
     </div>
 </template>
@@ -19,26 +20,33 @@
 <script>
 
     import DayTask from './DayTask.vue';
+    import Plan from './Plan.vue';
 
-    let main;
-    export default main = {
+    export default {
         name: '',
         data () {
             return {
                 constArrayOfTasks: {},
                 final: {},
                 arr: [1, 2, 3, 4, 5],
-                todo: []
+                todo: [],
+                todaysNumber: Number,
+                todaysMonth: Number
             }
         },
         props: ['dayOfWeek', 'obj', 'dayOfMonth', 'isWeekend', 'sortedTasks', 'taskFromDB'],
         components: {
-            'day-task': DayTask
+            'day-task': DayTask,
+            plan: Plan
         },
 
         methods: {
             append: function () {
                 let appended = {};
+
+                // if before today
+                // if today
+                // if after today
 
                 // fill tasks from obj
                 if ((this.renderObject.task !== '') && (this.renderObject.time !== '')
@@ -62,7 +70,6 @@
                 // send appended tasks to schedule (database)
                     this.sendDataToSchedule(appended);
             },
-            // надо сделать чтобы удалялись задания нормально и не было ошибки при перетаскивании без удаления
 
             sendDataToSchedule: function (local) {
                 // send data to schedule
@@ -85,7 +92,6 @@
                let arr = [this.final, this.dayOfMonth];
                 this.$emit('change', arr);
             }
-
         },
 
         computed: {
@@ -131,6 +137,12 @@
                 } else {
                     return true;
                 }
+            },
+
+            getDate: function () {
+                let date = new Date();
+                this.todaysNumber = date.getDate();
+                this.todaysMonth = date.getMonth();
             }
         }
     }
@@ -170,8 +182,6 @@
         align-items: flex-end;
 
         padding: 0 5px;
-        /*font-weight: bold;*/
-
     }
 
     .weekend {

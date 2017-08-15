@@ -32,11 +32,15 @@
 
                 <!--RESULTS-->
                 <div class="results__msg"> {{ msgs.msgResults }}
-                    <div class="results">
-                        <res
-                                v-for="item in totalResults"
-                                v-bind:resName="item"></res>
-                    </div>
+                    <div class="res-btn">week</div>
+                    <div class="res-btn">month</div>
+                </div>
+
+                <div class="results">
+                    <res
+                            v-for="item in totalResults"
+                            v-bind:resName="item"
+                    ></res>
                 </div>
             </div>
 
@@ -94,10 +98,9 @@
                     msgTaskTime: 'Drag a new task here',
                     msgTasks: 'What are your tasks?',
                     msgTime: 'How much time did it take?',
-                    msgResults: 'Your results this month',
+                    msgResults: 'Your results this',
                     msgDelete: 'Delete task'
                 },
-
                 t: [],
                 d: [],
 
@@ -165,54 +168,45 @@
                 if (this.newTaskLine.length > 0) {
 
                     //push new key-value to tasks
-                    db.ref('stated-data/tasks').push(this.newTaskLine);
+                    db.ref('stated-data/tasks').push(this.newTaskLine.toLocaleLowerCase());
                     this.newTaskLine = '';
                 }
             },
 
             deleteTask: function () {
 
-                if (confirm('Are you sure you want to delete this task? Your total hours will be erased.')) {
+                // delete task from drag-block
+                this.res = {task: '', time: ''};
+                // for tasks+durations from schedule
+                if (this.taskToDelete.day !== 0) {
+                    let name = this.taskToDelete.name;
+                    let duration = this.taskToDelete.duration;
+                    let month = this.taskToDelete.month;
+                    let day = this.taskToDelete.day;
 
-                    // delete task from drag-block
-                    this.res = {task: '', time: ''};
-                    // for tasks+durations from schedule
-                    if (this.taskToDelete.day !== 0) {
-                        console.log('delete task from schedule');
-
-                        let name = this.taskToDelete.name;
-                        let duration = this.taskToDelete.duration;
-                        let month = this.taskToDelete.month;
-                        let day = this.taskToDelete.day;
-
-                        for (let key in this.todo) {
-                            if ((this.todo[key].name == name) && (this.todo[key].duration == duration) &&
-                                (this.todo[key].month == month) && (this.todo[key].day == day)) {
-                                console.log(key);
-                                db.ref('todo/' + key).remove();
-                            }
+                    for (let key in this.todo) {
+                        if ((this.todo[key].name == name) && (this.todo[key].duration == duration) &&
+                            (this.todo[key].month == month) && (this.todo[key].day == day)) {
+                            db.ref('todo/' + key).remove();
                         }
-                        this.$emit('deleteFromFinal');
-                        this.taskToDelete.name = '';
-                        this.taskToDelete.duration = '';
-
-
-                    } else if (this.taskToDelete.name !== '') {
-
-                        // to delete stated task
-                        console.log('delete another task');
-                        let toDelete = this.taskToDelete.name; // web
-                        let arr = this.statedTasks;
-                        delete arr['.key'];
-
-                        for (let key in arr) {
-                            if (arr[key] == toDelete) {
-                                db.ref('stated-data/tasks/' + key).remove();
-                            }
-                        }
-
-                        this.taskToDelete.name = '';
                     }
+                    this.$emit('deleteFromFinal');
+                    this.taskToDelete.name = '';
+                    this.taskToDelete.duration = '';
+
+                } else if (this.taskToDelete.name !== '') {
+
+                    // to delete stated task
+                    let toDelete = this.taskToDelete.name; // web
+                    let arr = this.statedTasks;
+                    delete arr['.key'];
+
+                    for (let key in arr) {
+                        if (arr[key] == toDelete) {
+                            db.ref('stated-data/tasks/' + key).remove();
+                        }
+                    }
+                     this.taskToDelete.name = '';
                 }
             }
 
@@ -230,11 +224,9 @@
             totalResults: function () {
                 let arr = [];
                 let result = {};
-//                let tasks = this.tasks;
                 let tasks = [];
 
                 //get only tasks of this month
-
                 for (let key in this.todo) {
                     if (this.todo[key].month == this.selectedMonth)  {
                        if ( tasks.indexOf(this.todo[key].name) == -1) {
@@ -242,7 +234,6 @@
                        }
                     }
                 }
-                console.log(tasks);
 
                 // take every task from stated tasks
                 delete this.todo['.key'];
@@ -335,6 +326,7 @@
     .column-group {
         flex-direction: column;
         display: flex;
+        /*align-items: center;*/
     }
 
     .time,
@@ -352,7 +344,7 @@
         padding: 4px 4px 8px;
         min-width: 140px;
         width: auto;
-        max-width: 100%;
+        /*max-width: 100%;*/
         flex-grow: 0;
 
 
@@ -369,8 +361,7 @@
 
     .tasks,
     .time,
-    .delete,
-    .new-task {
+    .delete {
         max-width: 240px;
     }
 
@@ -383,5 +374,32 @@
 
     .new-task {
         padding: 4px 10px 8px;
+    }
+
+    .results {
+
+    }
+
+    .results__msg {
+        flex-direction: row;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 5px;
+
+    }
+
+    .res-btn {
+        border: 1px solid darkgrey;
+        border-radius: 2px;
+        height: 20px;
+        width: 55px;
+        margin-bottom: 2px;
+        margin-left: -1px;
+        cursor: pointer;
+    }
+
+    .res-btn:first-child {
+        margin-left: 5px;
     }
 </style>

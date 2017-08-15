@@ -1,9 +1,7 @@
 <template>
     <div>
         <h1>TO-DO</h1>
-        <!--month:-->
-        <!--{{ selectedMonth}}-->
-
+        <h2>2017</h2>
         <ul id="months">
             <month 
                     v-for="index in 12"

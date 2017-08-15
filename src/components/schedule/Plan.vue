@@ -1,6 +1,6 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
-    <div id="results">
-        {{resName}}
+    <div id="plan">
+
     </div>
 </template>
 
@@ -9,26 +9,27 @@
     export default {
         name: '',
         data () {
-            return {
-            }
-        },
-        props: ['resName']
+            return {}
+        }
     }
 </script>
 
 <style scoped>
-    #results {
+
+    #plan {
         display: flex;
-        flex-direction: column;
+        align-items: center;
         justify-content: center;
 
-        width: auto;
-        height: 30px;
+        width: 20px;
+
+        height: 25px;
+        border: 2px dashed darkgrey;
         border-radius: 3px;
-        margin: 4px 2px 0;
+        background: white;
+        margin: auto 3px;
         padding: 0 6px;
 
         cursor: pointer;
     }
-
 </style>

@@ -77,14 +77,14 @@
         border: 1px solid black;
         border-radius: 3px;
         padding: 4px 4px 8px;
-        min-width: 140px;
-        width: auto;
+        width: 240px;
         max-width: 100%;
         flex-grow: 0;
 
 
         min-height: 30px;
-        height: 36px;
+        /*height: 36px;*/
+        height: 70px;
         margin: 0 5px 10px;
 
         position: relative;
@@ -96,7 +96,7 @@
         justify-content: center;
 
         width: auto;
-        max-width: 200px;
+        /*max-width: 200px;*/
 
         height: 30px;
         border: 1px solid grey;
