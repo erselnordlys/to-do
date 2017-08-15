@@ -1,10 +1,7 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="affairs" v-if="show">
 
-
         <div class="row-group">
-
-            {{ passTaskTime}}
 
             <!--new task drag, tasks list-->
             <div class="column-group">
@@ -64,10 +61,11 @@
     import Res from './Results.vue';
     import TaskTime from  './TaskTime.vue';
     import Delete from './DeleteBtn.vue';
-
+    import {db} from '../../firebase-module';
+    import {todoRef} from '../../firebase-module';
 
     export default {
-        name: 'Affairs',
+        name: 'Task-panel',
         data () {
             return {
                 msgNewTask: 'Add a new task in list:',
@@ -99,11 +97,10 @@
                 temp: {task: '', time: ''},
                 prepObj: '',
                 newTaskLine: '',
-                deleteDT: {},
                 deleteDayTaskTemp: {}
             }
         },
-        props: ['show', 'task', 'passTaskTime', 'vals'],
+        props: ['show', 'task', 'passTaskTime', 'vals', 'taskToDelete'],
         components: {
             task: Task,
             duration: Time,
@@ -162,32 +159,47 @@
             },
 
             deleteTask: function () {
-                if(this.renderdeleteDTTemp == {}) {
-                    var newObj = this.tasks;
-                    this.tasks = {};
 
-                    delete newObj[this.temp.task]; // таск который удаляется в этот момент
+                let name = this.taskToDelete.name;
+                let duration = this.taskToDelete.duration;
+                let month = this.taskToDelete.month;
+                let day = this.taskToDelete.day;
 
-                    for (var key in newObj) {
-                        this.tasks[key] = key;
+                for (let key in this.todo) {
+                    if ( (this.todo[key].name == name) && (this.todo[key].duration == duration) &&
+                        (this.todo[key].month == month) && (this.todo[key].day == day) ) {
+                        console.log(key);
+                        db.ref('todo/' + key).remove();
                     }
-                    // delete task from task-time block if dragged
-                    if (this.temp.task == this.res.task)  {
-                        this.res.task = '';
-                        this.res.time = '';
-                    }
-                    this.temp.task = '';
-
-                } else {
-                    // delete daytask
-
-                    this.renderdeleteDTTemp = this.deleteDT;
-//                    this.deleteDT = {};
-
-                    console.log(this.deleteDT);
-
-//                delete this.deleteDayTaskTemp[val];
                 }
+
+                this.$emit('deleteFromFinal');
+
+
+//                if(this.renderdeleteDTTemp == {}) {
+//                    var newObj = this.tasks;
+//                    this.tasks = {};
+//
+//                    delete newObj[this.temp.task]; // таск который удаляется в этот момент
+//
+//                    for (var key in newObj) {
+//                        this.tasks[key] = key;
+//                    }
+//                    // delete task from task-time block if dragged
+//                    if (this.temp.task == this.res.task)  {
+//                        this.res.task = '';
+//                        this.res.time = '';
+//                    }
+//                    this.temp.task = '';
+//
+//                } else {
+//                    // delete daytask
+//
+////                    this.renderdeleteDTTemp = this.deleteDT;
+//                    this.deleteDayTaskTemp = this.taskToDelete;
+//                    console.log(this.taskToDelete);
+
+//                }
 
 
             }
@@ -201,11 +213,20 @@
 
             onTasks: function () {
                 return this.tasks;
-            },
-
-            renderdeleteDTTemp: function () {
-                return this.deleteDayTaskTemp;
             }
+        },
+
+        firebase () {
+            return {
+                todo: {
+                    source: todoRef,
+                    asObject: true,
+                    cancelCallback: function () {
+                        console.log('error')
+                    }
+                }
+            }
+
         }
     }
 </script>

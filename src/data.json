@@ -1,0 +1,17 @@
+{ "0": { "day": 20, "duration": 5, "month": 6, "name": "web" }, "1": { "day": 1, "duration": 100, "month": 3, "name": "French" }, "sfe": { "duration": 1, "month": 3, "name": "diploma" } }
+
+{
+  ".key": {
+    "day": 1,
+    "duration": 100,
+    "month": 3,
+    "name": "French" },
+
+  "name": "French",
+  "duration": 100,
+  "month": 3,
+  "day": 1 },
+
+{ ".key":
+{ "day": 11,
+"duration": 1, "month": 3, "name": "diploma" }, "name": "diploma", "duration": 1, "month": 3, "day": 11 }
