@@ -15,7 +15,7 @@
         data () {
             return {
                 msg: 'Drag a new task here',
-                clearBtn: 'x',
+                clearBtn: 'x'
             }
         },
         props: {

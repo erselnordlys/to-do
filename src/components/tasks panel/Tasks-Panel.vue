@@ -129,6 +129,7 @@
                 }
 
                 this.temp.time = '';
+                this.$emit('changeDropped');
             },
 
             getTask: function (val) {
@@ -137,15 +138,13 @@
                 this.temp.time = '';
 
                 this.taskToDelete.name = val;
+                this.taskToDelete.day = 0;
                 this.taskToDelete.duration = 0;
-                console.log(val);
             },
 
             getTime: function (val) {
-                // add chosen time to temp map
                 this.temp.time = val;
                 this.temp.task = '';
-
             },
 
             getPreparedObj: function (val) {
@@ -172,8 +171,10 @@
 
             deleteTask: function () {
 
+                // delete task from drag-block
+                this.res = {task: '', time: ''};
                 // for tasks+durations from schedule
-                if (this.taskToDelete.duration !== 0) {
+                if (this.taskToDelete.day !== 0) {
                     console.log('delete task from schedule');
 
                     let name = this.taskToDelete.name;
@@ -189,33 +190,37 @@
                         }
                     }
                     this.$emit('deleteFromFinal');
+                    this.taskToDelete.name = '';
+                    this.taskToDelete.duration = '';
 
-                } else {
+
+                } else if (this.taskToDelete.name !== ''){
+
                     // to delete stated task
                     console.log('delete another task');
                     let toDelete = this.taskToDelete.name; // web
-                    let child;
                     let arr = this.statedTasks;
-                    console.log(arr);
-
                     delete arr['.key'];
 
                     for (let key in arr) {
-                        console.log(key);
                         if(arr[key] == toDelete) {
-                            console.log(key);
-//                            this.t.splice(key, 1);
                             db.ref('stated-data/tasks/' + key).remove();
                         }
                     }
-                }
 
+                    this.taskToDelete.name = '';
+
+                }
             }
 
         },
 
         computed: {
             results: function () {
+                // this displays in drag-block
+                if(this.vals == true) {
+                    this.res = {task: '', time: ''};
+                }
                 return this.res;
             },
 
@@ -259,6 +264,11 @@
 
                 statedTasks: {
                     source: db.ref('stated-data/tasks'),
+                    asObject: true
+                },
+
+                statedDurations: {
+                    source: db.ref('stated-data/durations'),
                     asObject: true
                 }
             }

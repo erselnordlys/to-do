@@ -1,6 +1,8 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="main">
 
+        {{orderedData}}
+
         <months
                 v-on:change="toggleBool"
                 v-on:selectCurrentMonth="saveSelectedMonth"
@@ -27,6 +29,7 @@
         </div>
 
         <panel
+                @changeDropped="dropIsFalse"
                 v-bind:show="bool"
                 v-bind:vals="dropped"
                 v-on:dragTaskTime="saveTaskTime"
@@ -92,6 +95,10 @@
                 this.taskTimeReceived = { task: '', time: ''}
             },
 
+            dropIsFalse: function () {
+                this.dropped = false;
+            },
+
             saveDayTask: function (obj) {
                 this.dayTaskForDelete = obj;
             },
@@ -137,6 +144,14 @@
 
                 return sorted;
 
+            },
+
+            orderedData: function () {
+                let todo = this.todo;
+                delete todo['.key'];
+                for (let key in todo) {
+                    console.log(todo[key]);
+                }
             }
         },
 
