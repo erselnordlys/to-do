@@ -2,14 +2,13 @@
     <div id="day"
          @drop="append"
          >
-
-        {{getDate}}
         <div style="display:none">{{vis}}</div>
-        <div class="num-of-day" v-bind:class="{ weekend: isWeekend }"> {{ dayOfMonth + ' ' + dayOfWeek }}</div>
+        <div class="num-of-day" v-bind:class="{ weekend: isWeekend }"> {{dayOfMonth + ' ' + dayOfWeek }}</div>
         <day-task
                 v-if="vis"
                 v-for="item in renderTask"
                 v-bind:tsk="item"
+                v-bind:id="getId"
                 @dayTaskDrag="change">
         </day-task>
 
@@ -23,18 +22,16 @@
     import Plan from './Plan.vue';
 
     export default {
-        name: '',
+        name: 'day',
         data () {
             return {
                 constArrayOfTasks: {},
                 final: {},
                 arr: [1, 2, 3, 4, 5],
                 todo: [],
-                todaysNumber: Number,
-                todaysMonth: Number
             }
         },
-        props: ['dayOfWeek', 'obj', 'dayOfMonth', 'isWeekend', 'sortedTasks', 'taskFromDB'],
+        props: ['dayOfWeek', 'obj', 'dayOfMonth', 'isWeekend', 'sortedTasks', 'taskFromDB', 'selectedMonth'],
         components: {
             'day-task': DayTask,
             plan: Plan
@@ -43,11 +40,6 @@
         methods: {
             append: function () {
                 let appended = {};
-
-                // if before today
-                // if today
-                // if after today
-
                 // fill tasks from obj
                 if ((this.renderObject.task !== '') && (this.renderObject.time !== '')
                     && (this.renderObject.task !== undefined) && (this.renderObject.time !== undefined)) {
@@ -61,14 +53,13 @@
                         // give a time value
                         this.constArrayOfTasks[this.renderObject.task] = this.renderObject.time;
                         appended[this.renderObject.task] = this.renderObject.time;
-
                     }
                 }
                 this.final = {};
                 this.final = this.constArrayOfTasks;
 
                 // send appended tasks to schedule (database)
-                    this.sendDataToSchedule(appended);
+                this.sendDataToSchedule(appended);
             },
 
             sendDataToSchedule: function (local) {
@@ -139,10 +130,16 @@
                 }
             },
 
-            getDate: function () {
-                let date = new Date();
-                this.todaysNumber = date.getDate();
-                this.todaysMonth = date.getMonth();
+            getId: function () {
+                let d = new Date();
+                let today = d.getDate();
+                let month = d.getMonth();
+
+                if ((today > this.dayOfMonth) || (month > this.selectedMonth))  {
+                    return 'task'
+                } else {
+                    return 'plan'
+                }
             }
         }
     }

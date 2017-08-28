@@ -32,8 +32,8 @@
 
                 <!--RESULTS-->
                 <div class="results__msg"> {{ msgs.msgResults }}
-                    <div class="res-btn">week</div>
-                    <div class="res-btn">month</div>
+                    <!--<div class="res-btn">week</div>-->
+                    <!--<div class="res-btn">month</div>-->
                 </div>
 
                 <div class="results">
@@ -98,7 +98,7 @@
                     msgTaskTime: 'Drag a new task here',
                     msgTasks: 'What are your tasks?',
                     msgTime: 'How much time did it take?',
-                    msgResults: 'Your results this',
+                    msgResults: 'Your results this month',
                     msgDelete: 'Delete task'
                 },
                 t: [],
@@ -108,7 +108,7 @@
                 temp: {task: '', time: ''},
                 prepObj: '',
                 newTaskLine: '',
-                deleteDayTaskTemp: {}
+                deleteDayTaskTemp: {},
             }
         },
         props: ['show', 'task', 'passTaskTime', 'vals', 'taskToDelete', 'selectedMonth'],
@@ -208,7 +208,7 @@
                     }
                      this.taskToDelete.name = '';
                 }
-            }
+            },
 
         },
 
@@ -226,7 +226,7 @@
                 let result = {};
                 let tasks = [];
 
-                //get only tasks of this month
+                //get only tasks of this month from DB
                 for (let key in this.todo) {
                     if (this.todo[key].month == this.selectedMonth)  {
                        if ( tasks.indexOf(this.todo[key].name) == -1) {
@@ -326,7 +326,6 @@
     .column-group {
         flex-direction: column;
         display: flex;
-        /*align-items: center;*/
     }
 
     .time,

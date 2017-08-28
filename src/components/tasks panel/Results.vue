@@ -7,11 +7,7 @@
 <script>
 
     export default {
-        name: '',
-        data () {
-            return {
-            }
-        },
+        name: 'results',
         props: ['resName']
     }
 </script>

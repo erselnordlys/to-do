@@ -1,11 +1,11 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 
-        <div> {{ msg }}
-            <div id="task-time">
-                <div class="res" v-if="vis" draggable="true" v-on:drag="change">{{ myObj.task + ' ' + myObj.time + h}}</div>
-                <div class="clear-btn" v-if="vis" v-on:click="clearRes">{{ clearBtn }}</div>
-            </div>
+    <div> {{ msg }}
+        <div id="task-time">
+            <div class="res" v-if="vis" draggable="true" v-on:drag="change">{{ myObj.task + ' ' + myObj.time + h}}</div>
+            <div class="clear-btn" v-if="vis" v-on:click="clearRes">{{ clearBtn }}</div>
         </div>
+    </div>
 </template>
 
 <script>
@@ -24,20 +24,17 @@
         },
 
         methods: {
-
             // clear results by click on btn
             clearRes: function () {
                 console.log('clearRes');
                 // hide clear btn
                 this.myObj.task = '';
                 this.myObj.time = '';
-
                 this.$emit('clear');
             },
 
             change: function () {
                 this.$emit('dragTaskTime', this.myObj);
-
             }
         },
 
@@ -58,7 +55,7 @@
             },
 
             myObj: function () {
-                    return this.obj;
+                return this.obj;
             }
 
         }
@@ -81,12 +78,9 @@
         max-width: 100%;
         flex-grow: 0;
 
-
         min-height: 30px;
-        /*height: 36px;*/
         height: 70px;
         margin: 0 5px 10px;
-
         position: relative;
     }
 
@@ -96,8 +90,6 @@
         justify-content: center;
 
         width: auto;
-        /*max-width: 200px;*/
-
         height: 30px;
         border: 1px solid grey;
         border-radius: 3px;
