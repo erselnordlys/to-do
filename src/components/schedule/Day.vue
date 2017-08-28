@@ -19,7 +19,6 @@
 <script>
 
     import DayTask from './DayTask.vue';
-    import Plan from './Plan.vue';
 
     export default {
         name: 'day',
@@ -34,7 +33,6 @@
         props: ['dayOfWeek', 'obj', 'dayOfMonth', 'isWeekend', 'sortedTasks', 'taskFromDB', 'selectedMonth'],
         components: {
             'day-task': DayTask,
-            plan: Plan
         },
 
         methods: {

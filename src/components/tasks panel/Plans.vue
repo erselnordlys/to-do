@@ -1,33 +1,28 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
-    <div id="plan">
-
+    <div id="plans">
+        {{planName}}
     </div>
 </template>
 
 <script>
 
     export default {
-        name: '',
-        data () {
-            return {}
-        }
+        name: 'plans',
+        props: ['planName']
     }
 </script>
 
 <style scoped>
 
-    #plan {
+    #plans {
         display: flex;
-        align-items: center;
+        flex-direction: column;
         justify-content: center;
 
-        width: 20px;
-
-        height: 25px;
-        border: 2px dashed darkgrey;
+        width: auto;
+        height: 30px;
         border-radius: 3px;
-        background: white;
-        margin: auto 3px;
+        margin: 4px 2px 0;
         padding: 0 6px;
 
         cursor: pointer;

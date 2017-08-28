@@ -4,7 +4,6 @@
         <div class="row-group">
 
             {{getTasksAndDurationsFromDB}}
-
             <!--new task drag, tasks list, results-->
             <div class="column-group">
 
@@ -18,6 +17,28 @@
                     ></task-time>
                 </div>
 
+                <!--RESULTS-->
+                <div> {{ msgs.msgResults }}
+                    <div class="results">
+                        <res
+                                v-for="item in totalResults"
+                                v-bind:resName="item"
+                        ></res>
+                    </div>
+                </div>
+
+                <!--PLANS-->
+                <div> {{ msgs.msgPlans }}
+                    <div class="plans">
+                        <plans
+                                v-for="item in totalPlans"
+                                v-bind:planName="item"
+                        ></plans>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column-group">
                 <!--TASKS LIST-->
                 <div class="tasks__msg">{{ msgs.msgTasks }}
                     <div class="tasks">
@@ -29,23 +50,6 @@
                         ></task>
                     </div>
                 </div>
-
-                <!--RESULTS-->
-                <div class="results__msg"> {{ msgs.msgResults }}
-                    <!--<div class="res-btn">week</div>-->
-                    <!--<div class="res-btn">month</div>-->
-                </div>
-
-                <div class="results">
-                    <res
-                            v-for="item in totalResults"
-                            v-bind:resName="item"
-                    ></res>
-                </div>
-            </div>
-
-            <!--time, new task, delete-->
-            <div class="column-group">
 
                 <!--DURATIONS LIST-->
                 <div class="time__msg">{{ msgs.msgTime }}
@@ -59,12 +63,13 @@
                 </div>
 
                 <!--NEW TASK INPUT-->
-                <div class="new-task__msg" > {{ msgs.msgNewTask}}
-                    <input
-                            class="new-task"
-                            v-model="newTaskLine"
-                            v-on:keyup.enter="addNewTask"
-                    />
+                <div> {{ msgs.msgNewTask}}
+                    <div class="new-task">
+                        <input
+                                v-model="newTaskLine"
+                                v-on:keyup.enter="addNewTask"
+                        />
+                    </div>
                 </div>
 
                 <!--DELETE BUTTON-->
@@ -86,6 +91,7 @@
     import Res from './Results.vue';
     import TaskTime from  './TaskTime.vue';
     import Delete from './DeleteBtn.vue';
+    import Plans from './Plans.vue';
     import {db} from '../../firebase-module';
     import {todoRef} from '../../firebase-module';
 
@@ -99,7 +105,8 @@
                     msgTasks: 'What are your tasks?',
                     msgTime: 'How much time did it take?',
                     msgResults: 'Your results this month',
-                    msgDelete: 'Delete task'
+                    msgDelete: 'Delete task',
+                    msgPlans: 'Your plans this month'
                 },
                 t: [],
                 d: [],
@@ -117,7 +124,8 @@
             duration: Time,
             res: Res,
             'task-time': TaskTime,
-            'del-block': Delete
+            'del-block': Delete,
+            plans: Plans
         },
         methods: {
             // when dropped on a drag-block
@@ -168,7 +176,7 @@
                 if (this.newTaskLine.length > 0) {
 
                     //push new key-value to tasks
-                    db.ref('stated-data/tasks').push(this.newTaskLine.toLocaleLowerCase());
+                    db.ref('stated-data/tasks').push(this.newTaskLine.toLowerCase());
                     this.newTaskLine = '';
                 }
             },
@@ -241,18 +249,64 @@
 
                     let totalHours = 0;
                     let task = tasks[key];
+                    let d = new Date();
+                    let day = d.getDate();
 
                     // check every to-do object in DB, take needed hours for a current task
                     for (let key in this.todo) {
-                        if ((this.todo[key].name == task) && (this.todo[key].month == this.selectedMonth) ) {
+                        if ((this.todo[key].name == task) && (this.todo[key].month == this.selectedMonth) &&
+                            (this.todo[key].day <= day)) {
                             totalHours += this.todo[key].duration;
                         }
                         // put task: total time in the common object
                         result[task] = totalHours;
                     }
-                    arr.push(task.charAt(0).toUpperCase() + task.slice(1) + ': ' + totalHours + ' h');
+                    if (totalHours !== 0) {
+                        arr.push(task.charAt(0).toUpperCase() + task.slice(1) + ': ' + totalHours + ' h');
+
+                    }
                 }
 
+                return arr;
+            },
+
+            totalPlans: function () {
+                let arr = [];
+                let result = {};
+                let tasks = [];
+
+                //get only tasks of this month from DB
+                for (let key in this.todo) {
+                    if (this.todo[key].month == this.selectedMonth)  {
+                        if ( tasks.indexOf(this.todo[key].name) == -1) {
+                            tasks.push(this.todo[key].name);
+                        }
+                    }
+                }
+
+                // take every task from stated tasks
+                delete this.todo['.key'];
+                for (let key in tasks) {
+
+                    let totalHours = 0;
+                    let task = tasks[key];
+                    let d = new Date();
+                    let day = d.getDate();
+
+                    // check every to-do object in DB, take needed hours for a current task
+                    for (let key in this.todo) {
+                        if ((this.todo[key].name == task) && (this.todo[key].month == this.selectedMonth) &&
+                            (this.todo[key].day > day)) {
+                            totalHours += this.todo[key].duration;
+                        }
+                        // put task: total time in the common object
+                            result[task] = totalHours;
+                    }
+                    if (totalHours !== 0) {
+                        arr.push(task.charAt(0).toUpperCase() + task.slice(1) + ': ' + totalHours + ' h');
+
+                    }
+                }
                 return arr;
             },
 
@@ -331,7 +385,8 @@
     .time,
     .results,
     .tasks,
-    .new-task {
+    .new-task,
+    .plans{
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -343,62 +398,36 @@
         padding: 4px 4px 8px;
         min-width: 140px;
         width: auto;
-        /*max-width: 100%;*/
+        max-width: 100%;
         flex-grow: 0;
-
 
         min-height: 30px;
         height: auto;
         margin: 0 5px 10px;
     }
 
-    .results {
+    .results,
+    .plans{
         flex-direction: column;
         align-items: flex-start;
     }
 
-
     .tasks,
     .time,
-    .delete {
+    .new-task {
         max-width: 240px;
     }
 
     input {
-        width: 100%;
+        border: none;
         height: 100%;
         font-size: 18px;
         outline: none;
+        width: 100%;
     }
 
     .new-task {
+        flex-grow: 3;
         padding: 4px 10px 8px;
-    }
-
-    .results {
-
-    }
-
-    .results__msg {
-        flex-direction: row;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 5px;
-
-    }
-
-    .res-btn {
-        border: 1px solid darkgrey;
-        border-radius: 2px;
-        height: 20px;
-        width: 55px;
-        margin-bottom: 2px;
-        margin-left: -1px;
-        cursor: pointer;
-    }
-
-    .res-btn:first-child {
-        margin-left: 5px;
     }
 </style>
