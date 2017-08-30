@@ -1,23 +1,25 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
-    <div id="time">
-        <div class="msg">{{msg}}</div><br>
-        <div class="hour" v-for="item in durations"  draggable="true" v-on:drag="display(item)">{{ item + 'h' }}</div>
+    <div id="task">
+        <div class="msg">{{msg}}</div>
+        <div class="task-name" v-for="(item, index) in tasks"  draggable="true" v-on:drag="drag(item)">{{item}}</div>
     </div>
 </template>
 
 <script>
 
     export default {
-        name: 'time',
+        name: 'tasks',
         data () {
             return {
-                msg: 'How much time did it take?'
+                smth: this.task,
+                msg: 'What are your tasks?'
             }
         },
-        props: ['durations'],
+        props: ['tasks'],
         methods: {
-            display: function (time) {
-                this.$emit('dragTime', time);
+
+            drag: function (task) {
+                this.$emit('dragTask', task);
             }
         }
     }
@@ -25,17 +27,18 @@
 
 <style scoped>
 
-    #time {
+    #task {
         background-color: #fff;
         display: flex;
         flex-direction: row;
         align-items: flex-start;
         justify-content: center;
-        flex-grow: 1;
         flex-wrap: wrap;
-        padding: 4px 2px 8px;
+        padding: 4px 10px 8px 20px;
         min-width: 140px;
-        width: 100%;
+        width: auto;
+        max-width: 100%;
+        flex-grow: 0;
 
         min-height: 30px;
         height: auto;
@@ -46,14 +49,16 @@
         width: 100%;
     }
 
-    .hour {
-        align-items: center;
-        background-color: #cef5ed;
+    .task-name {
+        align-items: flex-start;
+        background-color: #c8bed1;
         display: flex;
         flex-direction: column;
         height: 30px;
         justify-content: center;
-        width: 40px;
         margin: 3px;
+        padding: 0 10px;
+        width: auto;
     }
+
 </style>

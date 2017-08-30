@@ -5,6 +5,7 @@
         <div style="display:none">{{vis}}</div>
         <div class="num-of-day" v-bind:class="{ weekend: isWeekend }"> {{dayOfMonth + ' ' + dayOfWeek }}</div>
         <day-task
+                class="task"
                 v-if="vis"
                 v-for="item in renderTask"
                 v-bind:tsk="item"
@@ -135,6 +136,8 @@
 
                 if ((today > this.dayOfMonth) || (month > this.selectedMonth))  {
                     return 'task'
+                } else if ((today == this.dayOfMonth) && (month == this.selectedMonth)) {
+                    return 'today'
                 } else {
                     return 'plan'
                 }
@@ -149,12 +152,14 @@
 
     #day {
         width: 100%;
-        border-bottom: 1px solid grey;
-        height: 36px;
+        border-bottom: 1px solid #bebebe;
+        color: #595959;
+        min-height: 33px;
 
         display: flex;
         justify-content: flex-start;
         flex-direction: row;
+        flex-wrap: wrap;
         align-items: flex-end;
     }
 
@@ -167,20 +172,27 @@
     }
 
     .num-of-day {
-        height: inherit;
+        height: 33px;
         width: 60px;
-        background: whitesmoke;
 
+        color: #595959;
         display: flex;
         justify-content: flex-start;
         flex-direction: row;
         align-items: flex-end;
 
-        padding: 0 5px;
+        padding: 0 0 0 10px;
     }
 
     .weekend {
-        color: indianred;
+        border-left: 4px solid #d9a4a6;
+        width: 56px;
+        padding: 0 5px;
+
+    }
+
+    #day .task:last-child {
+        margin-right: 10px;
     }
 
 </style>

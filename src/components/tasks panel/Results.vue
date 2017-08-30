@@ -1,6 +1,7 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="results">
-        {{resName}}
+        <div class="msg">{{resMsg}}</div>
+        <div class="resultName" v-for="item in allResults">{{item}}</div>
     </div>
 </template>
 
@@ -8,23 +9,44 @@
 
     export default {
         name: 'results',
-        props: ['resName']
+        data () {
+            return {
+                resMsg: 'Your results this month:'
+            }
+        },
+        props: ['allResults']
     }
 </script>
 
 <style scoped>
     #results {
+        align-items: flex-start;
+        background-color: #fff;
+        display: flex;
+        flex-direction: row;
+        flex-grow: 0;
+        flex-wrap: wrap;
+        height: auto;
+        justify-content: center;
+        margin: 0 5px 10px;
+        max-width: 100%;
+        min-height: 30px;
+        min-width: 140px;
+        padding: 4px 10px 8px 10px;
+        width: auto;
+    }
+
+    .msg {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .resultName {
+        align-items: flex-start;
         display: flex;
         flex-direction: column;
         justify-content: center;
-
-        width: auto;
-        height: 30px;
-        border-radius: 3px;
-        margin: 4px 2px 0;
-        padding: 0 6px;
-
-        cursor: pointer;
+        padding-left: 10px;
+        width: 100%;
     }
 
 </style>

@@ -1,7 +1,7 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
-    <div>
-        {{msgMain}}
-        <div id="delete">{{ msg }}</div>
+    <div id="delete">
+        <div class="msg">{{ msg }}</div>
+        <div class="button">{{symbol}}</div>
 
     </div>
 </template>
@@ -12,8 +12,8 @@
         name: '',
         data () {
             return {
-                msgMain:'Drag here to delete',
-                msg: 'x'
+                msg:'Drag here to delete',
+                symbol: 'x'
             }
         }
     }
@@ -22,26 +22,33 @@
 <style scoped>
 
     #delete {
-        background: indianred;
+        background-color: #fff;
         display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 34px;
-
         flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
         flex-wrap: wrap;
-
-        border: 1px solid black;
-        border-radius: 3px;
-        padding: 4px 4px 8px;
         min-width: 140px;
         width: auto;
         max-width: 100%;
-        flex-grow: 0;
-
+        flex-grow: 1;
 
         min-height: 30px;
+        height: auto;
         margin: 0 5px 10px;
+    }
 
+    .msg {
+        height: 30px;
+        width: 100%;
+    }
+
+    .button {
+        align-items: center;
+        background-color: #e7767d;
+        display: flex;
+        justify-content: center;
+        height: 50px;
+        width: 100%;
     }
 </style>

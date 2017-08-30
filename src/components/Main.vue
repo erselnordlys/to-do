@@ -11,7 +11,7 @@
 
         <div v-if="!bool">choose the month</div>
 
-        <div
+        <div class="schedule"
                 @drop="dropTask"
                 @dragover.prevent
                  >
@@ -123,7 +123,7 @@
                         let dBMonth = data[key].month;
                         if (dBMonth == month) {
                             let elem = {};
-                            elem.name = data[key].name;
+                            elem.name = data[key].name.toLowerCase();
                             elem.duration = data[key].duration;
                             elem.month = dBMonth;
                             elem.day = data[key].day;
@@ -171,10 +171,24 @@
 <style scoped>
 
     #main {
+        background: #efefef;
+        color: #9e9e9e;
         display: flex;
         align-items: flex-start;
-        justify-content: center;
+        justify-content: flex-start;
+        flex-direction: row;
         width: 100%;
         height: 100%;
     }
+
+    .schedule {
+        max-width: 800px;
+        display: flex;
+        flex-grow: 1;
+
+        min-width: 400px;
+        width: auto;
+        margin-left: 20px;
+    }
+
 </style>

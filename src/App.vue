@@ -42,6 +42,10 @@
 </script>
 
 <style>
+    body {
+        background-color: #efefef;
+        overflow: hidden;
+    }
     #app {
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
@@ -58,7 +62,7 @@
 
     h1, h2 {
         font-weight: normal;
-        margin: 0 0 8px;
+        margin: 0;
     }
 
     ul {

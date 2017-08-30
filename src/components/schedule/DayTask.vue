@@ -1,5 +1,5 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
-    <div draggable="true" @drag="dragged">
+    <div draggable="true" @drag="dragged" class="task">
         {{tsk}}
     </div>
 </template>
@@ -24,29 +24,32 @@
 
 <style scoped>
 
-    #task {
+    .task {
         display: flex;
         align-items: center;
         justify-content: center;
         width: auto;
         height: 30px;
         border-radius: 3px;
-        background: lightgray;
+        color: #595959;
+
+        font-size: 15px;
+        background: white;
         margin: auto 3px;
         padding: 0 6px;
         cursor: pointer;
     }
 
+    #task {
+        background: #c8c8c8;
+    }
+
     #plan {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: auto;
         height: 25px;
-        border: 2px dashed grey;
-        border-radius: 3px;
-        margin: auto 3px;
-        padding: 0 6px;
-        cursor: pointer;
+        border: 2px dashed #47d9c4;
+    }
+
+    #today {
+        background: #c9bade;
     }
 </style>

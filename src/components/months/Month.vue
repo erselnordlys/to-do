@@ -49,31 +49,30 @@
 
 <style scoped>
     .month {
+        background-color:#526e83;
+        color: white;
         display: flex;
         align-items: center;
-        justify-content: center;
-        border: 1px solid black;
-        border-radius: 3px;
-        width: 100px;
-        height: 40px;
-
+        justify-content: flex-end;
         margin-bottom: 5px;
-
+        height: 40px;
         user-select: none;
         cursor: pointer;
+        padding-right: 20px;
+
     }
 
+
     .month:last-child {
-        margin-bottom: 0;
     }
 
     .month:hover {
-        background-color: lightgray;
+        background-color: #385368;
     }
 
     .selected {
-        background-color: black !important;
-        color: white;
+        background-color: #ff8789 !important;
     }
+
 
 </style>

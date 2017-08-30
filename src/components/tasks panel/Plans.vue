@@ -1,6 +1,8 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div id="plans">
-        {{planName}}
+        <div class="msg">{{planMsg}}</div>
+        <div class="plan-name" v-for="item in allPlans">{{item}}</div>
+
     </div>
 </template>
 
@@ -8,23 +10,44 @@
 
     export default {
         name: 'plans',
-        props: ['planName']
+        data () {
+            return {
+             planMsg: 'Your plans this month:'
+            }
+        },
+        props: ['allPlans']
     }
 </script>
 
 <style scoped>
 
     #plans {
+        align-items: flex-start;
+        background-color: #fff;
+        display: flex;
+        flex-direction: row;
+        flex-grow: 0;
+        flex-wrap: wrap;
+        height: auto;
+        justify-content: center;
+        margin: 0 5px 10px;
+        max-width: 100%;
+        min-height: 30px;
+        min-width: 140px;
+        padding: 4px 10px 8px 10px;
+        width: auto;
+    }
+
+    .msg {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .plan-name {
+        align-items: flex-start;
         display: flex;
         flex-direction: column;
         justify-content: center;
-
-        width: auto;
-        height: 30px;
-        border-radius: 3px;
-        margin: 4px 2px 0;
-        padding: 0 6px;
-
-        cursor: pointer;
+        padding-left: 10px;
+        width: 100%;
     }
 </style>

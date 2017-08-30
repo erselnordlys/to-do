@@ -129,20 +129,20 @@
 <style scoped>
 
     #schedule {
-        height: auto;
-        min-height: 558px;
-        max-width: 800px;
-        width: auto;
-        flex-grow: 1;
+        background-color: #fff;
+        color: #9e9e9e;
+        width: 100%;
         min-width: 400px;
 
+        height: 700px;
+        max-height: 90%;
+        min-height: 600px;
+        flex-grow: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
-
-        border: 1px solid black;
-        border-radius: 3px;
+        overflow: scroll;
     }
 
     button {

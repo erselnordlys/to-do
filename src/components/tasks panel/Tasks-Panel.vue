@@ -1,11 +1,8 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns="">
     <div id="affairs" v-if="show">
-
-        <div class="row-group">
-
-            {{getTasksAndDurationsFromDB}}
-            <!--new task drag, tasks list, results-->
-            <div class="column-group">
+        {{getTasksAndDurationsFromDB}}
+        <!--new task drag, tasks list, results-->
+        <div class="column-group">
 
                 <!--DRAG BLOCK for new tasks-->
                 <div @drop="drop" @dragover.prevent>
@@ -18,59 +15,40 @@
                 </div>
 
                 <!--RESULTS-->
-                <div> {{ msgs.msgResults }}
-                    <div class="results">
-                        <res
-                                v-for="item in totalResults"
-                                v-bind:resName="item"
-                        ></res>
-                    </div>
+                <div class="results">
+                    <res
+                            v-bind:allResults="totalResults"
+                    ></res>
                 </div>
 
                 <!--PLANS-->
-                <div> {{ msgs.msgPlans }}
-                    <div class="plans">
-                        <plans
-                                v-for="item in totalPlans"
-                                v-bind:planName="item"
-                        ></plans>
-                    </div>
+                <div class="plans">
+                    <plans
+                            v-bind:allPlans="totalPlans"
+                    ></plans>
                 </div>
             </div>
-
-            <div class="column-group">
+        <div class="column-group">
                 <!--TASKS LIST-->
-                <div class="tasks__msg">{{ msgs.msgTasks }}
-                    <div class="tasks">
-                        <task
-                                v-for="item in tasks"
-                                @dragTask="getTask"
-                                v-bind:task="item"
-                                id="task"
-                        ></task>
-                    </div>
-                </div>
+            <div class="tasks">
+                <task
+                        @dragTask="getTask"
+                        v-bind:tasks="tasks"
+                ></task>
+            </div>
 
                 <!--DURATIONS LIST-->
-                <div class="time__msg">{{ msgs.msgTime }}
-                    <div class="time">
-                        <duration
-                                @dragTime="getTime"
-                                v-for="item in durations"
-                                v-bind:hours="item"
-                        ></duration>
-                    </div>
-                </div>
+            <div class="time">
+                <duration
+                        @dragTime="getTime"
+                        v-bind:durations="durations"
+                ></duration>
+            </div>
 
                 <!--NEW TASK INPUT-->
-                <div> {{ msgs.msgNewTask}}
-                    <div class="new-task">
-                        <input
-                                v-model="newTaskLine"
-                                v-on:keyup.enter="addNewTask"
-                        />
-                    </div>
-                </div>
+            <div class="new-task">
+                <new-task-input></new-task-input>
+            </div>
 
                 <!--DELETE BUTTON-->
                 <div @drop="deleteTask" @dragover.prevent>
@@ -78,20 +56,18 @@
                 </div>
 
             </div>
-
-        </div>
-
     </div>
 </template>
 
 <script>
 
-    import Task from './Task.vue';
+    import Task from './Tasks.vue';
     import Time from './Time.vue';
     import Res from './Results.vue';
     import TaskTime from  './TaskTime.vue';
     import Delete from './DeleteBtn.vue';
     import Plans from './Plans.vue';
+    import NewTaskInput from './NewTaskInput.vue';
     import {db} from '../../firebase-module';
     import {todoRef} from '../../firebase-module';
 
@@ -100,13 +76,8 @@
         data () {
             return {
                 msgs: {
-                    msgNewTask: 'Add a new task in list:',
                     msgTaskTime: 'Drag a new task here',
-                    msgTasks: 'What are your tasks?',
-                    msgTime: 'How much time did it take?',
-                    msgResults: 'Your results this month',
                     msgDelete: 'Delete task',
-                    msgPlans: 'Your plans this month'
                 },
                 t: [],
                 d: [],
@@ -114,7 +85,6 @@
                 res: {task: '', time: ''},
                 temp: {task: '', time: ''},
                 prepObj: '',
-                newTaskLine: '',
                 deleteDayTaskTemp: {},
             }
         },
@@ -125,7 +95,8 @@
             res: Res,
             'task-time': TaskTime,
             'del-block': Delete,
-            plans: Plans
+            plans: Plans,
+            'new-task-input': NewTaskInput
         },
         methods: {
             // when dropped on a drag-block
@@ -168,17 +139,6 @@
                 // hide clear btn
                 this.res = { task: '', time: ''};
                 this.temp = { task: '', time: ''};
-            },
-
-            addNewTask: function() {
-
-                // if there is something in the input
-                if (this.newTaskLine.length > 0) {
-
-                    //push new key-value to tasks
-                    db.ref('stated-data/tasks').push(this.newTaskLine.toLowerCase());
-                    this.newTaskLine = '';
-                }
             },
 
             deleteTask: function () {
@@ -365,69 +325,36 @@
         width: auto;
         height: auto;
 
+        color: #595959;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        flex-grow: 1;
         align-items: flex-start;
         justify-content: flex-start;
         margin-left: 10px;
-
-    }
-    .row-group {
-        display: flex;
-        flex-direction: row;
     }
 
     .column-group {
         flex-direction: column;
+        flex-grow: 1;
         display: flex;
+        max-width: 220px;
+    }
+
+    .column-group:last-child {
+        max-width: 280px;
     }
 
     .time,
     .results,
     .tasks,
     .new-task,
-    .plans{
+    .plans {
+        width: 100%;
         display: flex;
         flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
-
-        border: 1px solid black;
-        border-radius: 3px;
-        padding: 4px 4px 8px;
-        min-width: 140px;
-        width: auto;
-        max-width: 100%;
-        flex-grow: 0;
-
-        min-height: 30px;
-        height: auto;
-        margin: 0 5px 10px;
-    }
-
-    .results,
-    .plans{
-        flex-direction: column;
         align-items: flex-start;
+        justify-content: center;
     }
 
-    .tasks,
-    .time,
-    .new-task {
-        max-width: 240px;
-    }
-
-    input {
-        border: none;
-        height: 100%;
-        font-size: 18px;
-        outline: none;
-        width: 100%;
-    }
-
-    .new-task {
-        flex-grow: 3;
-        padding: 4px 10px 8px;
-    }
 </style>
