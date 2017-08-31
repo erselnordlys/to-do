@@ -28,12 +28,12 @@
         flex-wrap: wrap;
         height: auto;
         justify-content: center;
-        margin: 0 5px 10px;
+        margin: 0 0 10px;
         max-width: 100%;
         min-height: 30px;
         min-width: 140px;
         padding: 4px 10px 8px 10px;
-        width: auto;
+        width: 100%;
     }
 
     .msg {

@@ -7,7 +7,7 @@
 <script>
 
     export default {
-        name: '',
+        name: 'daytask',
         data () {
             return {}
         },
@@ -16,7 +16,6 @@
         methods:  {
             dragged: function () {
                 this.$emit('dayTaskDrag');
-
             }
         }
     }
@@ -30,7 +29,6 @@
         justify-content: center;
         width: auto;
         height: 30px;
-        border-radius: 3px;
         color: #595959;
 
         font-size: 15px;

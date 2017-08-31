@@ -34,20 +34,19 @@
 <style scoped>
 
     #newTask {
+        align-items: flex-start;
         background-color: #fff;
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
-        justify-content: center;
+        flex-grow: 0;
         flex-wrap: wrap;
-        min-width: 140px;
-        width: auto;
-        max-width: 100%;
-        flex-grow: 1;
-
+        height: 75px;
+        justify-content: center;
+        margin: 0 0 10px;
         min-height: 30px;
-        height: auto;
-        margin: 0 5px 10px;
+        min-width: 140px;
+        padding: 4px 0 0;
+        width: 100%;
     }
 
     .msg {

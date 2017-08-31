@@ -29,13 +29,13 @@
         justify-content: center;
         flex-wrap: wrap;
         min-width: 140px;
-        width: auto;
         max-width: 100%;
         flex-grow: 1;
 
         min-height: 30px;
         height: auto;
-        margin: 0 5px 10px;
+        /*margin: 0 5px 10px;*/
+        width: 100%;
     }
 
     .msg {

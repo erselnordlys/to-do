@@ -28,21 +28,20 @@
 <style scoped>
 
     #task {
+        align-items: flex-start;
         background-color: #fff;
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
-        justify-content: center;
-        flex-wrap: wrap;
-        padding: 4px 10px 8px 20px;
-        min-width: 140px;
-        width: auto;
-        max-width: 100%;
         flex-grow: 0;
-
-        min-height: 30px;
+        flex-wrap: wrap;
         height: auto;
-        margin: 0 5px 10px;
+        justify-content: center;
+        margin: 0 0 10px;
+        max-width: 100%;
+        min-height: 30px;
+        min-width: 140px;
+        padding: 4px 10px 8px;
+        width: auto;
     }
 
     .msg {

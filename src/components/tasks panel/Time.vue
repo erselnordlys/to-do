@@ -26,20 +26,19 @@
 <style scoped>
 
     #time {
+        align-items: flex-start;
         background-color: #fff;
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
-        justify-content: center;
-        flex-grow: 1;
+        flex-grow: 0;
         flex-wrap: wrap;
-        padding: 4px 2px 8px;
-        min-width: 140px;
-        width: 100%;
-
+        height: 75px;
+        justify-content: center;
+        margin: 0 0 10px;
         min-height: 30px;
-        height: auto;
-        margin: 0 5px 10px;
+        min-width: 140px;
+        padding: 4px 0 8px;
+        width: 100%;
     }
 
     .msg {

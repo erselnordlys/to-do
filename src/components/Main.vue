@@ -179,16 +179,18 @@
         flex-direction: row;
         width: 100%;
         height: 100%;
+        max-height: 100%;
     }
 
     .schedule {
-        max-width: 800px;
         display: flex;
         flex-grow: 1;
-
+        max-width: 800px;
+        height: 700px;
         min-width: 400px;
         width: auto;
         margin-left: 20px;
+        overflow: auto;
     }
 
 </style>

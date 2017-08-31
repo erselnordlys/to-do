@@ -71,12 +71,11 @@
         flex-wrap: wrap;
         height: 75px;
         justify-content: center;
-        margin: 0 5px 10px;
-        max-width: 100%;
+        margin: 0 5px 10px 0;
         min-height: 30px;
         min-width: 140px;
-        padding: 4px 10px 8px 10px;
-        width: auto;
+        padding: 4px 0 8px;
+        width: 100%;
     }
 
     .task-time {
@@ -85,6 +84,7 @@
         justify-content: center;
         position: relative;
         width: 100%;
+        margin-bottom: 10px;
     }
     .res {
         align-items: center;
@@ -103,7 +103,7 @@
         display: flex;
         justify-content: center;
         position: absolute;
-        right: -10px;
+        right: 0;
         font-weight: bold;
         cursor: pointer;
         height: 100%;

@@ -163,10 +163,6 @@
         align-items: flex-end;
     }
 
-    .hovered {
-        outline: dashed;
-    }
-
     #day:last-child {
         border-bottom: none;
     }

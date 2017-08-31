@@ -134,15 +134,13 @@
         width: 100%;
         min-width: 400px;
 
-        height: 700px;
-        max-height: 90%;
-        min-height: 600px;
         flex-grow: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
-        overflow: scroll;
+        overflow: auto;
+        width: 100%;
     }
 
     button {

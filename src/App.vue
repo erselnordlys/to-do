@@ -42,8 +42,12 @@
 </script>
 
 <style>
+    html,
     body {
         background-color: #efefef;
+        height: 100%;
+        margin-bottom: 0;
+        max-height: 100%;
         overflow: hidden;
     }
     #app {
@@ -56,6 +60,8 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        height: auto;
+        max-height: 100%;
         align-items: center;
         width: 100%;
     }

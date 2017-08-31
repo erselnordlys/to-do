@@ -1,6 +1,7 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns="">
     <div id="affairs" v-if="show">
         {{getTasksAndDurationsFromDB}}
+        <!--{{taskToDelete}}-->
         <!--new task drag, tasks list, results-->
         <div class="column-group">
 
@@ -75,10 +76,6 @@
         name: 'Task-panel',
         data () {
             return {
-                msgs: {
-                    msgTaskTime: 'Drag a new task here',
-                    msgDelete: 'Delete task',
-                },
                 t: [],
                 d: [],
 
@@ -142,11 +139,13 @@
             },
 
             deleteTask: function () {
-
                 // delete task from drag-block
                 this.res = {task: '', time: ''};
                 // for tasks+durations from schedule
+
                 if (this.taskToDelete.day !== 0) {
+                    console.log(this.taskToDelete);
+
                     let name = this.taskToDelete.name;
                     let duration = this.taskToDelete.duration;
                     let month = this.taskToDelete.month;
@@ -159,12 +158,13 @@
                         }
                     }
                     this.$emit('deleteFromFinal');
-                    this.taskToDelete.name = '';
-                    this.taskToDelete.duration = '';
+//                    this.taskToDelete.name = '';
+//                    this.taskToDelete.duration = '';
 
-                } else if (this.taskToDelete.name !== '') {
+                }
 
-                    // to delete stated task
+                // to delete stated task
+                else if (this.taskToDelete.name !== '') {
                     let toDelete = this.taskToDelete.name; // web
                     let arr = this.statedTasks;
                     delete arr['.key'];
@@ -338,11 +338,13 @@
         flex-direction: column;
         flex-grow: 1;
         display: flex;
-        max-width: 220px;
+        max-width: 210px;
+        margin-right: 5px;
     }
 
     .column-group:last-child {
-        max-width: 280px;
+        max-width: 270px;
+        margin-left: 5px;
     }
 
     .time,
