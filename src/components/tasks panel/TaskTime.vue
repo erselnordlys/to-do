@@ -69,10 +69,9 @@
         flex-direction: row;
         flex-grow: 0;
         flex-wrap: wrap;
-        height: 75px;
         justify-content: center;
         margin: 0 5px 10px 0;
-        min-height: 30px;
+        min-height: 100px;
         min-width: 140px;
         padding: 4px 0 8px;
         width: 100%;

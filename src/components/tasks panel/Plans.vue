@@ -1,5 +1,5 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
-    <div id="plans">
+    <div id="plans" v-if="vis">
         <div class="msg">{{planMsg}}</div>
         <div class="plan-name" v-for="item in allPlans">{{item}}</div>
 
@@ -12,10 +12,19 @@
         name: 'plans',
         data () {
             return {
-             planMsg: 'Your plans this month:'
+                planMsg: 'Your plans this month:'
             }
         },
-        props: ['allPlans']
+        props: ['allPlans'],
+        computed: {
+            vis: function () {
+                if (this.allPlans[0] == undefined) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
     }
 </script>
 
