@@ -2,6 +2,7 @@
     <div id="main">
         {{orderedData}}
         <div style="display:none;">{{thisMonth}}</div>
+        <!--<auth></auth>-->
         <months
                 v-on:change="toggleBool"
                 v-on:selectCurrentMonth="saveSelectedMonth"
@@ -39,16 +40,16 @@
 </template>
 
 <script>
-
     import months from './months/Months.vue';
     import schedule from './schedule/Schedule.vue';
     import TasksPanel from './tasks panel/Tasks-Panel.vue';
+    import Auth from './Auth.vue';
     import {db} from '../firebase-module';
     import {todoRef} from '../firebase-module';
 
 
     export default {
-        name: '',
+        name: 'main',
         data () {
             return {
                 bool: true,
@@ -67,7 +68,8 @@
         components: {
             months: months,
             schedule: schedule,
-            panel: TasksPanel
+            panel: TasksPanel,
+            auth: Auth
         },
         methods: {
             toggleBool: function () {
@@ -191,6 +193,10 @@
         width: auto;
         margin-left: 20px;
         overflow: auto;
+    }
+
+    .auth {
+        position: absolute;
     }
 
 </style>
